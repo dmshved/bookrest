@@ -3,7 +3,7 @@
 ## bookrest
 This is a REST API restaurant table booking system made using
 
-### ` ASP.NET Core Web API `
+### `ASP.NET Core Web API`
 </div>
 
 Bookrest is a complex and modern restaurant table booking REST API. It helps you to book restaurant table clearly and painless.
@@ -38,7 +38,7 @@ Bookrest is a complex and modern restaurant table booking REST API. It helps you
 - HealthChecks:
     - HealthChecks
 - Logging:
-    - 
+    - Serilog 
 - Unit Testing: 
     - xUnit
     - Moq
@@ -46,7 +46,11 @@ Bookrest is a complex and modern restaurant table booking REST API. It helps you
     - Test Containers 
     -  WebApplication Factory
 
-## Key Features
+## Features
+
+_in progress..._
+
+## Database schema
 
 _in progress..._
 
