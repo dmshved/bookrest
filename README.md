@@ -1,6 +1,6 @@
 <div align="center">
 
-## bookrest
+## 📜 bookrest
 This is a REST API restaurant table booking system made using
 
 ### `ASP.NET Core Web API`
@@ -25,7 +25,7 @@ Bookrest is a complex and modern restaurant table booking REST API. It helps you
     - SQL Server
     - EF Core
     - Redis
-- Authentication:
+- IAM:
     - Identity 2FA + JWT
 - Payment Service:
     - Stripe
