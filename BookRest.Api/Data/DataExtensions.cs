@@ -6,7 +6,7 @@ public static class DataExtensions
 {
     public static void AddDatabase(this WebApplicationBuilder builder)
     {
-        builder.Services.AddDbContext<ApplicationDbContext>(options => options.UseSqlServer(builder.Configuration.GetConnectionString("bookrest-db")));
+        builder.Services.AddDbContext<ApplicationDbContext>(options => options.UseNpgsql(builder.Configuration.GetConnectionString("bookrest-db")));
     }
     public static void MigrateDb(this WebApplication app)
     {
