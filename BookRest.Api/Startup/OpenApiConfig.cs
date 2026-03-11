@@ -9,15 +9,12 @@ public static class OpenApiConfig
     }
     public static void UseOpenApi(this WebApplication app)
     {
-        if (app.Environment.IsDevelopment())
+        app.MapOpenApi();
+        app.MapScalarApiReference(options =>
         {
-            app.MapOpenApi();
-            app.MapScalarApiReference(options =>
-            {
-                options.Title = "Bookrest API";
-                options.Theme = ScalarTheme.Kepler;
-                options.HideClientButton = true;
-            });
-        }
+            options.Title = "Bookrest API";
+            options.Theme = ScalarTheme.Kepler;
+            options.HideClientButton = true;
+        });
     }
 }

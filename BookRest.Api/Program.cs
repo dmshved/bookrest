@@ -1,12 +1,18 @@
+using BookRest.Api.Data;
 using BookRest.Api.Startup;
 
 var builder = WebApplication.CreateBuilder(args);
 
 builder.AddDependencies();
+builder.AddDatabase();
 
 var app = builder.Build();
 
-app.UseOpenApi();
+app.MigrateDb();
+
+await app.InitializeAsync();
+
+app.UseDevelopmentServices();
 
 app.UseHttpsRedirection();
 
