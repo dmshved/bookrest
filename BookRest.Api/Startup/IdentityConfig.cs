@@ -6,8 +6,8 @@ namespace BookRest.Api.Startup;
 
 public static class IdentityConfig
 {
-    public static void AddIdentityServices(this IServiceCollection builder)
+    public static void AddIdentityServices(this IServiceCollection services)
     {
-        builder.AddIdentity<ApplicationUser, IdentityRole>().AddEntityFrameworkStores<ApplicationDbContext>();
+        services.AddIdentity<AppUser, IdentityRole>().AddEntityFrameworkStores<AppDbContext>();
     }
 }
