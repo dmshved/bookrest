@@ -1,4 +1,9 @@
 <Solution>
+  <Folder Name="/Solution Items/">
+    <File Path=".editorconfig" />
+    <File Path="Directory.Build.props" />
+    <File Path="Directory.Packages.props" />
+  </Folder>
   <Project Path="src/BookRest.Api/BookRest.Api.csproj" />
   <Project Path="src/BookRest.Application/BookRest.Application.csproj" Id="93955ce9-d28d-49c8-ae07-e43fee43b408" />
   <Project Path="src/Bookrest.Domain/Bookrest.Domain.csproj" Id="f8b385c6-69c8-45d4-b124-a41f00944d81" />
