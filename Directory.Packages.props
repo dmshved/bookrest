@@ -1,4 +1,10 @@
-﻿<Project>
+﻿<!--
+Centralized Package Management (CPM)
+
+This file defines versions of NuGet packages used across the solution.
+Individual projects reference packages without specifying a version.
+-->
+<Project>
 	<PropertyGroup>
 		<ManagePackageVersionsCentrally>true</ManagePackageVersionsCentrally>
 	</PropertyGroup>
