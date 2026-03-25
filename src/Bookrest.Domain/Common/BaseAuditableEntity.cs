@@ -1,4 +1,4 @@
-﻿namespace Bookrest.Domain.Common;
+﻿namespace BookRest.Domain.Common;
 
 public abstract class BaseAuditableEntity : BaseEntity<string>
 {

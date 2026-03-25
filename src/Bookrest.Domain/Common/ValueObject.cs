@@ -1,4 +1,4 @@
-﻿namespace Bookrest.Domain.Common;
+﻿namespace BookRest.Domain.Common;
 
 // Learn more: https://docs.microsoft.com/en-us/dotnet/standard/microservices-architecture/microservice-ddd-cqrs-patterns/implement-value-objects
 // This type was created to standardize objects without identity and their comparison to each other by value for entire project

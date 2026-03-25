@@ -1,6 +1,6 @@
 ﻿using System.ComponentModel.DataAnnotations.Schema;
 
-namespace Bookrest.Domain.Common;
+namespace BookRest.Domain.Common;
 
 public abstract class BaseEntity<T>
 {
