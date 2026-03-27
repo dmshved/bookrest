@@ -1,2 +1,7 @@
-﻿<Project Sdk="Microsoft.NET.Sdk">
+﻿<Project Sdk="Microsoft.NET.Sdk">   
+  <ItemGroup>
+    <Folder Include="Common\Behaviours\" />
+    <Folder Include="Common\Models\" />
+    <Folder Include="Common\Exceptions\" />
+  </ItemGroup>
 </Project>
