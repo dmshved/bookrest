@@ -5,10 +5,11 @@ This file defines versions of NuGet packages used across the solution.
 Individual projects reference packages without specifying a version.
 -->
 <Project>
-	<PropertyGroup>
-		<ManagePackageVersionsCentrally>true</ManagePackageVersionsCentrally>
-	</PropertyGroup>
-	<ItemGroup>
-		<PackageVersion Include="MediatR" Version="14.1.0" />
-	</ItemGroup>
+  <PropertyGroup>
+    <ManagePackageVersionsCentrally>true</ManagePackageVersionsCentrally>
+  </PropertyGroup>
+  <ItemGroup>
+    <PackageVersion Include="FluentValidation.DependencyInjectionExtensions" Version="12.1.1" />
+    <PackageVersion Include="MediatR" Version="14.1.0" />
+  </ItemGroup>
 </Project>

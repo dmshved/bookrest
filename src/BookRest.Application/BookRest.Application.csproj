@@ -1,7 +1,7 @@
-﻿<Project Sdk="Microsoft.NET.Sdk">   
-  <ItemGroup>
-    <Folder Include="Common\Behaviours\" />
-    <Folder Include="Common\Models\" />
-    <Folder Include="Common\Exceptions\" />
-  </ItemGroup>
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+	<ItemGroup>
+		<PackageReference Include="FluentValidation.DependencyInjectionExtensions" />
+		<PackageReference Include="MediatR" />
+	</ItemGroup>
 </Project>
