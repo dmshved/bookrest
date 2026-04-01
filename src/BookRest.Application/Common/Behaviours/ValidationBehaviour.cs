@@ -1,3 +1,8 @@
+// Pipeline behaviour that enforces validation for a request. 
+// - Checks for Validators on the request type
+// - Validates request's validators
+// - Throws ValidationException if validation failed 
+
 using ValidationException = BookRest.Application.Common.Exceptions.ValidationException;
 
 namespace BookRest.Application.Common.Behaviours;

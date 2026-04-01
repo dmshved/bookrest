@@ -1,8 +1,14 @@
-﻿using System.Reflection;
+﻿// Pipeline behaviour that enforces authorization for a request. 
+// - Checks for [AuthorizeAttribute] on the request type
+// - Validates user's Roles if specified
+// - Validates user's Policies if specified
+// - Throws UnauthorizedAccessException if user isn't authenticated
+// - Throws ForbiddenAccessExcpetion if user lacks roles or policy
+
+using System.Reflection;
 using BookRest.Application.Common.Exceptions;
 using BookRest.Application.Common.Interfaces;
 using BookRest.Application.Common.Security;
-using MediatR;
 
 namespace BookRest.Application.Common.Behaviours;
 
