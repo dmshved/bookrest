@@ -12,20 +12,13 @@ using BookRest.Application.Common.Security;
 
 namespace BookRest.Application.Common.Behaviours;
 
-public class AuthorizationBehaviour<TRequest, TResponse>(
-    IUser user,
-    IIdentityService identityService
-) : IPipelineBehavior<TRequest, TResponse>
+public class AuthorizationBehaviour<TRequest, TResponse>(IUser user, IIdentityService identityService) : IPipelineBehavior<TRequest, TResponse>
     where TRequest : notnull
 {
     private readonly IUser _user = user;
     private readonly IIdentityService _identityService = identityService;
 
-    public async Task<TResponse> Handle(
-        TRequest request,
-        RequestHandlerDelegate<TResponse> next,
-        CancellationToken cancellationToken
-    )
+    public async Task<TResponse> Handle(TRequest request, RequestHandlerDelegate<TResponse> next, CancellationToken cancellationToken)
     {
         var authorizeAttributes = request.GetType().GetCustomAttributes<AuthorizeAttribute>();
 
@@ -38,9 +31,7 @@ public class AuthorizationBehaviour<TRequest, TResponse>(
             }
 
             // Role based authorization
-            var authorizeAttributesWithRoles = authorizeAttributes.Where(a =>
-                !string.IsNullOrWhiteSpace(a.Roles)
-            );
+            var authorizeAttributesWithRoles = authorizeAttributes.Where(a => !string.IsNullOrWhiteSpace(a.Roles));
 
             if (authorizeAttributesWithRoles.Any())
             {
@@ -67,9 +58,8 @@ public class AuthorizationBehaviour<TRequest, TResponse>(
             }
 
             // Policy based authorization
-            var authorizationAttributesWithPolicies = authorizeAttributes.Where(a =>
-                !string.IsNullOrWhiteSpace(a.Policy)
-            );
+            var authorizationAttributesWithPolicies = authorizeAttributes.Where(a => !string.IsNullOrWhiteSpace(a.Policy));
+
             if (authorizationAttributesWithPolicies.Any())
             {
                 foreach (var policy in authorizationAttributesWithPolicies.Select(a => a.Policy))
