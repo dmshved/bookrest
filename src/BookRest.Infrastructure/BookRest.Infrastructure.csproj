@@ -3,4 +3,17 @@
   <PropertyGroup>
   </PropertyGroup>
 
+  <ItemGroup>
+    <Folder Include="Data\Interceptors\" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Microsoft.EntityFrameworkCore" />
+    <PackageReference Include="Npgsql.EntityFrameworkCore.PostgreSQL" />
+  </ItemGroup>
+	
+  <ItemGroup>
+	<ProjectReference Include="..\BookRest.Application\BookRest.Application.csproj" />
+  </ItemGroup>
+	
 </Project>
