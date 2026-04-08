@@ -28,7 +28,7 @@ public class PerfomanceBehaviour<TRequest, TResponse>(ILogger<TRequest> logger, 
 
         if (elapsedMilliseconds > 500)
         {
-            var reqestName = typeof(TRequest).Name;
+            var requestName = typeof(TRequest).Name;
             var userId = _user.Id ?? string.Empty;
             var userName = string.Empty;
 
@@ -38,7 +38,7 @@ public class PerfomanceBehaviour<TRequest, TResponse>(ILogger<TRequest> logger, 
             }
 
             _logger.LogWarning("BookRest Long Running Request: {Name} ({ElapsedMilliseconds} milliseconds) {@UserId} {@UserName} {@Request}",
-                reqestName, elapsedMilliseconds, userId, userName, request);
+                requestName, elapsedMilliseconds, userId, userName, request);
         }
 
         return response;

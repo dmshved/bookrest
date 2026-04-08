@@ -3,7 +3,7 @@ using BookRest.Application.Common.Behaviours;
 using Microsoft.Extensions.Hosting;
 
 // Placing the extension method in this namespace makes it 
-// avaliable without requiring an additional using.
+// available without requiring an additional using.
 namespace Microsoft.Extensions.DependencyInjection;
 
 public static class DependencyInjection

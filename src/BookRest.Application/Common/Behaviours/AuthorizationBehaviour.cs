@@ -3,7 +3,7 @@
 // - Validates user's Roles if specified
 // - Validates user's Policies if specified
 // - Throws UnauthorizedAccessException if user isn't authenticated
-// - Throws ForbiddenAccessExcpetion if user lacks roles or policy
+// - Throws ForbiddenAccessException if user lacks roles or policy
 
 using System.Reflection;
 using BookRest.Application.Common.Exceptions;
