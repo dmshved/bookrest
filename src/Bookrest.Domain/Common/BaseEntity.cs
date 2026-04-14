@@ -4,7 +4,7 @@ namespace BookRest.Domain.Common;
 
 public abstract class BaseEntity<T>
 {
-    // EF Core handles Id's by itself
+    // EF Core uses conventions to process the Id
     public T Id { get; set; } = default!;
 
     private List<BaseEvent> _domainEvents = new();

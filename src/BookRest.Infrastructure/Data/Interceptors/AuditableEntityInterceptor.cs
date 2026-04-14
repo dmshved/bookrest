@@ -1,4 +1,7 @@
-﻿using BookRest.Application.Common.Interfaces;
+﻿// Updates audit fields for all tracked auditable entities, checks referenced entities for ownership,
+// before EF Core saves changes to the database.
+
+using BookRest.Application.Common.Interfaces;
 using BookRest.Domain.Common;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.ChangeTracking;
@@ -46,6 +49,7 @@ public class AuditableEntityInterceptor(IUser user, TimeProvider dateTime) : Sav
     }
 }
 
+// More about accessing Tracked Entities: https://learn.microsoft.com/en-us/ef/core/change-tracking/entity-entries
 public static class Extensions
 {
     public static bool HasChangedOwnedEntities(this EntityEntry entry) =>
