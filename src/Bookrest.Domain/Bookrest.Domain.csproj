@@ -1,5 +1,10 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
+  <PropertyGroup>
+    <RootNamespace>BookRest.Domain</RootNamespace>
+    <AssemblyName>BookRest.Domain</AssemblyName>
+  </PropertyGroup>
+
   <ItemGroup>
     <Folder Include="Enums\" />
     <Folder Include="Events\" />

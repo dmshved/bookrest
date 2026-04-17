@@ -7,9 +7,14 @@ using Microsoft.EntityFrameworkCore.Diagnostics;
 
 namespace BookRest.Infrastructure.Data.Interceptors;
 
-internal class DispatchDomainEventsInterceptor(IMediator mediator) : SaveChangesInterceptor
+internal class DispatchDomainEventsInterceptor : SaveChangesInterceptor
 {
-    private readonly IMediator _mediator = mediator;
+    private readonly IMediator _mediator;
+
+    public DispatchDomainEventsInterceptor(IMediator mediator)
+    {
+        _mediator = mediator;
+    }
 
     public override InterceptionResult<int> SavingChanges(DbContextEventData eventData, InterceptionResult<int> result)
     {

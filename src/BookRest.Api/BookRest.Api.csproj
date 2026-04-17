@@ -1,5 +1,10 @@
 <Project Sdk="Microsoft.NET.Sdk.Web">
 
+	<PropertyGroup>
+	  <RootNamespace>BookRest.Domain</RootNamespace>
+      <AssemblyName>BookRest.Domain</AssemblyName>
+	</PropertyGroup>
+
 	<ItemGroup>
 		<ProjectReference Include="..\BookRest.Infrastructure\BookRest.Infrastructure.csproj" />
 	</ItemGroup>

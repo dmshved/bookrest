@@ -1,6 +1,8 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
+    <RootNamespace>BookRest.Infrastructure</RootNamespace>
+	<AssemblyName>BookRest.Infrastructure</AssemblyName>
   </PropertyGroup>
 
   <ItemGroup>

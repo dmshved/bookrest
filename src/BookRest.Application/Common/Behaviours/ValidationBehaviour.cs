@@ -7,10 +7,15 @@ using ValidationException = BookRest.Application.Common.Exceptions.ValidationExc
 
 namespace BookRest.Application.Common.Behaviours;
 
-public class ValidationBehaviour<TRequest, TResponse>(IEnumerable<IValidator<TRequest>> validators): IPipelineBehavior<TRequest, TResponse>
+public class ValidationBehaviour<TRequest, TResponse> : IPipelineBehavior<TRequest, TResponse>
     where TRequest : notnull
 {
-    private readonly IEnumerable<IValidator<TRequest>> _validators = validators;
+    private readonly IEnumerable<IValidator<TRequest>> _validators;
+
+    public ValidationBehaviour(IEnumerable<IValidator<TRequest>> validators)
+    {
+        _validators = validators;
+    }
 
     public async Task<TResponse> Handle(TRequest request, RequestHandlerDelegate<TResponse> next,CancellationToken cancellationToken)
     {
