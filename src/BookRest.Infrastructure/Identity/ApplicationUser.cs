@@ -1,5 +1,7 @@
-﻿namespace BookRest.Infrastructure.Identity;
+﻿using Microsoft.AspNetCore.Identity;
 
-internal class ApplicationUser
+namespace BookRest.Infrastructure.Identity;
+
+internal class ApplicationUser : IdentityUser
 {
 }
