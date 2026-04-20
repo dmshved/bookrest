@@ -2,7 +2,7 @@ using BookRest.Domain.Entities;
 
 namespace BookRest.Application.Common.Interfaces;
 
-interface IApplicationDbContext
+public interface IApplicationDbContext
 {
     DbSet<RefreshToken> RefreshTokens { get; }
 
