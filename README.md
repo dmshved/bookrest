@@ -1,10 +1,11 @@
 <div align="center">
-
-## 📜 bookrest
-This is a REST API restaurant table booking system made using
-
-### `ASP.NET Core Web API`
+    <img src="https://images2.imgbox.com/a9/16/2Uwa3gC7_o.png" height="120" style="vertical-align:middle;">
+    <span style="font-size:40px; vertical-align:middle;">
+        <strong>bookrest</strong>
+    </span>
 </div>
+
+## Project description
 
 Bookrest is a complex and modern restaurant table booking REST API. It helps you to book restaurant table clearly and painless.
 
