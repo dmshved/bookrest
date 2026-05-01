@@ -1,9 +1,8 @@
-<div align="center">
-    <img src="https://images2.imgbox.com/a9/16/2Uwa3gC7_o.png" height="120" style="vertical-align:middle;">
-    <span style="font-size:40px; vertical-align:middle;">
-        <strong>bookrest</strong>
-    </span>
-</div>
+<p align="center">
+<img width="120" src="https://images2.imgbox.com/a9/16/2Uwa3gC7_o.png" alt="BookRest logo">
+</p>
+
+<h1 align="center">Restaurant table booking REST API</h1>
 
 ## Project description
 
@@ -72,10 +71,11 @@ BookRest.Shared        // Centralise service name constants
 
 #### Traffic rule
 
-- Api references Application and Infrastructure.
-- Infrastructure references Application and Domain.
-- Application references Domain.
 - Domain references nobody.
+- Application references Domain.
+- Infrastructure references Application and Shared.
+- Api references Application and Infrastructure.
+- Shared references nobody.
 
 ## Database schema
 
