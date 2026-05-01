@@ -3,6 +3,7 @@
 	<PropertyGroup>
 	  <RootNamespace>BookRest.Api</RootNamespace>
       <AssemblyName>BookRest.Api</AssemblyName>
+      <UserSecretsId>7a28c483-4f2e-404f-9a14-9f0ccc5980a4</UserSecretsId>
 	</PropertyGroup>
 
 	<ItemGroup>
