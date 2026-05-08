@@ -50,7 +50,7 @@ public static class DependencyInjection
             });
 
         builder.Services.AddAuthorizationBuilder(); 
-        
+
         builder.Services
             .AddIdentityCore<ApplicationUser>()
             .AddRoles<IdentityRole>()
