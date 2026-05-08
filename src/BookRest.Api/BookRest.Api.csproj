@@ -5,10 +5,11 @@
       <AssemblyName>BookRest.Api</AssemblyName>
       <UserSecretsId>7a28c483-4f2e-404f-9a14-9f0ccc5980a4</UserSecretsId>
 	</PropertyGroup>
-
-	<ItemGroup>
-		<ProjectReference Include="..\BookRest.Infrastructure\BookRest.Infrastructure.csproj" />
-	</ItemGroup>
+    
+    <ItemGroup>
+        <ProjectReference Include="..\BookRest.Application\BookRest.Application.csproj" />
+        <ProjectReference Include="..\BookRest.Infrastructure\BookRest.Infrastructure.csproj" />
+    </ItemGroup>
 
 	<ItemGroup>
 		<PackageReference Include="Microsoft.AspNetCore.OpenApi" />
