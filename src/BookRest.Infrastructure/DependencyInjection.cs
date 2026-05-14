@@ -1,6 +1,8 @@
 ﻿using BookRest.Infrastructure.Data;
 using BookRest.Infrastructure.Data.Interceptors;
 using BookRest.Application.Common.Interfaces;
+using BookRest.Infrastructure.Data.ConfigureOptions;
+using BookRest.Infrastructure.Data.Options;
 using BookRest.Infrastructure.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Diagnostics;
@@ -9,7 +11,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Identity;
-using Microsoft.IdentityModel.Tokens;
+using Microsoft.Extensions.Options;
 
 namespace BookRest.Infrastructure;
 
@@ -33,21 +35,21 @@ public static class DependencyInjection
         });
 
         builder.Services.AddScoped<IApplicationDbContext>(provider => provider.GetRequiredService<ApplicationDbContext>());
-
+ 
         builder.Services.AddScoped<ApplicationDbContextInitialiser>();
+        
+        builder.Services
+            .AddOptions<JwtOptions>()
+            .BindConfiguration(JwtOptions.SectionName);
 
+        builder.Services.AddSingleton<IPostConfigureOptions<JwtBearerOptions>, ConfigureJwtBearerOptions>();
+        
         builder.Services.AddAuthentication(options =>
             {
                 options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
                 options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
             })
-            .AddJwtBearer(options =>
-            {
-                options.TokenValidationParameters.ValidIssuer = builder.Configuration[Services.JwtIssuer];
-                options.TokenValidationParameters.ValidAudience = builder.Configuration[Services.JwtAudience];
-                options.TokenValidationParameters.IssuerSigningKey =
-                    new SymmetricSecurityKey(System.Text.Encoding.UTF8.GetBytes(builder.Configuration[Services.JwtSecretKey]!));
-            });
+            .AddJwtBearer();
 
         builder.Services.AddAuthorizationBuilder(); 
 
