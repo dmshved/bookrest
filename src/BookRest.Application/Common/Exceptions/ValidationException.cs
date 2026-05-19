@@ -2,10 +2,10 @@
 
 namespace BookRest.Application.Common.Exceptions;
 
-internal class ValidationException : Exception
+public class ValidationException : Exception
 {
     public ValidationException()
-        : base("One or more validation failures occured.")
+        : base("One or more validation failures have occured.")
     {
         Errors = new Dictionary<string, string[]>();
     }
