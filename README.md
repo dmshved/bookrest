@@ -2,11 +2,11 @@
 <img width="120" src="https://images2.imgbox.com/a9/16/2Uwa3gC7_o.png" alt="BookRest logo">
 </p>
 
-<h1 align="center">Restaurant table booking REST API</h1>
+<h1 align="center">Restaurant Reservation System</h1>
 
 ## Project description
 
-Bookrest is a complex and modern restaurant table booking REST API. It helps you to book restaurant table clearly and painless.
+BookRest is a complex and modern restaurant reservation system. It provides a REST API to book restaurant tables clearly and painless.
 
 ## Table of Contents
 
@@ -40,7 +40,7 @@ Bookrest is a complex and modern restaurant table booking REST API. It helps you
     - HealthChecks
 - Logging:
     - Serilog
-- Validation: 
+- Validation:
     - FluentValidation
     - Ardalis.GuardClauses
 - Unit Testing:
@@ -64,7 +64,7 @@ This project is structured using **Clean Architecture** pattern
 ```
 BookRest.Domain        // Entities, value objects, domain events
 BookRest.Application   // Use cases, interfaces, DTOs
-BookRest.Infrastructure// Data access, external services 
+BookRest.Infrastructure// Data access, external services
 BookRest.Api           // Controllers, middleware, DI setup
 BookRest.Shared        // Centralise service name constants
 ```
