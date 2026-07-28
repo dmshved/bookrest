@@ -35,15 +35,15 @@ public static class DependencyInjection
         });
 
         builder.Services.AddScoped<IApplicationDbContext>(provider => provider.GetRequiredService<ApplicationDbContext>());
- 
+
         builder.Services.AddScoped<ApplicationDbContextInitialiser>();
-        
+
         builder.Services
             .AddOptions<JwtOptions>()
             .BindConfiguration(JwtOptions.SectionName);
 
         builder.Services.AddSingleton<IPostConfigureOptions<JwtBearerOptions>, ConfigureJwtBearerOptions>();
-        
+
         builder.Services.AddAuthentication(options =>
             {
                 options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
@@ -51,7 +51,7 @@ public static class DependencyInjection
             })
             .AddJwtBearer();
 
-        builder.Services.AddAuthorizationBuilder(); 
+        builder.Services.AddAuthorizationBuilder();
 
         builder.Services
             .AddIdentityCore<ApplicationUser>()

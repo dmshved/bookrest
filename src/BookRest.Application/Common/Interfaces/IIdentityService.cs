@@ -2,7 +2,7 @@
 
 namespace BookRest.Application.Common.Interfaces;
 
-public interface IIdentityService 
+public interface IIdentityService
 {
     Task<string>? GetUserNameAsync(string userId);
 

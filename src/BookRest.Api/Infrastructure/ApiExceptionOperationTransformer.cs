@@ -15,15 +15,15 @@ internal sealed class ApiExceptionOperationTransformer : IOpenApiOperationTransf
     public Task TransformAsync(OpenApiOperation operation, OpenApiOperationTransformerContext context, CancellationToken cancellationToken)
     {
         operation.Responses ??= [];
-        operation.Responses.TryAdd("400", new OpenApiResponse { Description = "Bad request"});
+        operation.Responses.TryAdd("400", new OpenApiResponse { Description = "Bad request" });
 
         var requiresAuth = context.Description.ActionDescriptor.EndpointMetadata
             .Any(m => m is IAuthorizeData);
 
         if (requiresAuth)
         {
-            operation.Responses.TryAdd("401", new OpenApiResponse { Description = "Unauthorized"});
-            operation.Responses.TryAdd("403", new OpenApiResponse { Description = "Forbidden"});
+            operation.Responses.TryAdd("401", new OpenApiResponse { Description = "Unauthorized" });
+            operation.Responses.TryAdd("403", new OpenApiResponse { Description = "Forbidden" });
         }
 
         return Task.CompletedTask;

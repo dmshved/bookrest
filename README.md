@@ -58,7 +58,7 @@ _in progress..._
 This project is structured using **Clean Architecture** pattern
 
 <p align="center">
-<img src="https://thumbs2.imgbox.com/ba/62/cSISRs2H_t.png" alt="Clean Architecture">
+    <img src="https://milanjovanovic.tech/blogs/mnw_004/clean_architecture.png" height="300" alt="Clean Architecture">
 </p>
 
 ```
@@ -68,14 +68,6 @@ BookRest.Infrastructure// Data access, external services
 BookRest.Api           // Controllers, middleware, DI setup
 BookRest.Shared        // Centralise service name constants
 ```
-
-#### Traffic rule
-
-- Domain references nobody.
-- Application references Domain.
-- Infrastructure references Application and Shared.
-- Api references Application and Infrastructure.
-- Shared references nobody.
 
 ## Database schema
 

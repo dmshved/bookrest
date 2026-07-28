@@ -1,6 +1,4 @@
-var builder = WebApplication.CreateBuilder();
-
-builder.Services.AddControllers();
+var builder = WebApplication.CreateBuilder(args);
 
 builder.Services.AddOpenApi();
 

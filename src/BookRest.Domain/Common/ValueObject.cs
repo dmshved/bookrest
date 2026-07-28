@@ -6,11 +6,12 @@ public abstract class ValueObject
 {
     protected static bool EqualOperator(ValueObject left, ValueObject right)
     {
-        if (ReferenceEquals(left, null) ^ ReferenceEquals(right, null))
+        if (left is null ^ right is null)
         {
             return false;
         }
-        return ReferenceEquals(left, right) || left.Equals(right);
+
+        return left?.Equals(right!) != false;
     }
 
     protected static bool NotEqualOperator(ValueObject left, ValueObject right)
@@ -20,7 +21,7 @@ public abstract class ValueObject
 
     protected abstract IEnumerable<object> GetEqualityComponents();
 
-    public override bool Equals(object obj)
+    public override bool Equals(object? obj)
     {
         if (obj == null || obj.GetType() != GetType())
         {
@@ -28,24 +29,28 @@ public abstract class ValueObject
         }
 
         var other = (ValueObject)obj;
-
-        return this.GetEqualityComponents().SequenceEqual(other.GetEqualityComponents());
+        return GetEqualityComponents().SequenceEqual(other.GetEqualityComponents());
     }
 
     public override int GetHashCode()
     {
-        return GetEqualityComponents()
-            .Select(x => x != null ? x.GetHashCode() : 0)
-            .Aggregate((x, y) => x ^ y);
+        var hash = new HashCode();
+
+        foreach (var component in GetEqualityComponents())
+        {
+            hash.Add(component);
+        }
+
+        return hash.ToHashCode();
     }
 
-    public static bool operator ==(ValueObject one, ValueObject two)
+    public static bool operator ==(ValueObject left, ValueObject right)
     {
-        return EqualOperator(one, two);
+        return EqualOperator(left, right);
     }
 
-    public static bool operator !=(ValueObject one, ValueObject two)
+    public static bool operator !=(ValueObject left, ValueObject right)
     {
-        return NotEqualOperator(one, two);
+        return NotEqualOperator(left, right);
     }
 }

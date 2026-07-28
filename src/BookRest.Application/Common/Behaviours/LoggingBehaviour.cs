@@ -1,7 +1,4 @@
-﻿// Pipeline behaviour that enforces logging for a request. 
-// Logs information about request name, user id, user name, request type
-
-using BookRest.Application.Common.Interfaces;
+﻿using BookRest.Application.Common.Interfaces;
 using MediatR.Pipeline;
 using Microsoft.Extensions.Logging;
 

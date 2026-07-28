@@ -4,12 +4,11 @@ namespace BookRest.Domain.Common;
 
 public abstract class BaseEntity
 {
-    // EF Core uses conventions to process the Id
-    public Guid Id { get; set; } 
+    public Guid Id { get; set; }
 
     private List<BaseEvent> _domainEvents = new();
 
-    [NotMapped] // don't map this field into migration
+    [NotMapped]
     public IReadOnlyCollection<BaseEvent> DomainEvents => _domainEvents.AsReadOnly();
 
     public void AddDomainEvent(BaseEvent domainEvent)

@@ -1,8 +1,3 @@
-// Pipeline behaviour that enforces validation for a request. 
-// - Checks for Validators on the request type
-// - Validates request's validators
-// - Throws ValidationException if validation failed 
-
 using ValidationException = BookRest.Application.Common.Exceptions.ValidationException;
 
 namespace BookRest.Application.Common.Behaviours;
@@ -29,7 +24,7 @@ public class ValidationBehaviour<TRequest, TResponse> : IPipelineBehavior<TReque
                 .SelectMany(r => r.Errors)
                 .ToList();
 
-            if (failures.Count() != 0)
+            if (failures.Count != 0)
             {
                 throw new ValidationException(failures);
             }

@@ -1,7 +1,4 @@
-﻿// Updates audit fields for all tracked auditable entities, checks referenced entities for ownership,
-// before EF Core saves changes to the database.
-
-using BookRest.Application.Common.Interfaces;
+﻿using BookRest.Application.Common.Interfaces;
 using BookRest.Domain.Common;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.ChangeTracking;

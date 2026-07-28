@@ -1,10 +1,4 @@
-﻿// Pipeline behaviour that logs any unhandled exception thrown during the request pipeline.
-// - Invokes the next pipeline delegate
-// - Catches any exception thrown downstream
-// - Logs error with request exception and user information
-// - Rethrows the exceptions so the upper layers taking care of it
-
-using Microsoft.Extensions.Logging;
+﻿using Microsoft.Extensions.Logging;
 
 namespace BookRest.Application.Common.Behaviours;
 

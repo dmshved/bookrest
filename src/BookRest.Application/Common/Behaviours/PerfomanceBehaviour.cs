@@ -1,8 +1,4 @@
-﻿// Pipeline behaviour that measures the execution time of a request handler.
-// - Starts a timer before invoking the next delegate in the pipeline
-// - Logs a warning with request name and user information if the request takes longer than 500 ms
-
-using BookRest.Application.Common.Interfaces;
+﻿using BookRest.Application.Common.Interfaces;
 using Microsoft.Extensions.Logging;
 using System.Diagnostics;
 

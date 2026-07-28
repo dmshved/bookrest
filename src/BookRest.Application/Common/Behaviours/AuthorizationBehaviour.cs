@@ -1,11 +1,4 @@
-﻿// Pipeline behaviour that enforces authorization for a request. 
-// - Checks for [AuthorizeAttribute] on the request type
-// - Validates user's Roles if specified
-// - Validates user's Policies if specified
-// - Throws UnauthorizedAccessException if user isn't authenticated
-// - Throws ForbiddenAccessException if user lacks roles or policy
-
-using System.Reflection;
+﻿using System.Reflection;
 using BookRest.Application.Common.Exceptions;
 using BookRest.Application.Common.Interfaces;
 using BookRest.Application.Common.Security;
@@ -21,7 +14,7 @@ public class AuthorizationBehaviour<TRequest, TResponse> : IPipelineBehavior<TRe
     public AuthorizationBehaviour(IUser user, IIdentityService identityService)
     {
         _user = user;
-        _identityService = identityService; 
+        _identityService = identityService;
     }
 
     public async Task<TResponse> Handle(TRequest request, RequestHandlerDelegate<TResponse> next, CancellationToken cancellationToken)

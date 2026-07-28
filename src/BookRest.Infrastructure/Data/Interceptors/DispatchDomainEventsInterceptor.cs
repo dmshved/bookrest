@@ -1,6 +1,4 @@
-﻿// Dispatches all Domain events before EF Core saves changes to the database.
-
-using BookRest.Domain.Common;
+﻿using BookRest.Domain.Common;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Diagnostics;
