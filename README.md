@@ -11,8 +11,8 @@ BookRest is a restaurant reservation system. It provides a REST API to book rest
 ## Table of Contents
 
 - [Core Technologies](#core-technologies) - _in progress..._
-- [Features](#features) - _in progress..._
 - [Project Architecture](#project-architecture) - _in progress..._
+- [Architecture Decisions](#architecture-decisions) - _in progress..._
 - [Database schema](#database-schema) - _in progress..._
 - [License](#license)
 
@@ -25,21 +25,12 @@ BookRest is a restaurant reservation system. It provides a REST API to book rest
 - Database:
     - PostgreSQL
     - EF Core
-    - Redis
 - IAM:
-    - Identity 2FA + JWT
+    - JWT (Refresh + Access tokens)
 - Payment Service:
     - Stripe
-- Emails Handling:
-    - MailKit
 - Event Handling:
     - MediatR
-- Queue Handling:
-    - Hangfire
-- HealthChecks:
-    - HealthChecks
-- Logging:
-    - Serilog
 - Validation:
     - FluentValidation
     - Ardalis.GuardClauses
@@ -49,12 +40,9 @@ BookRest is a restaurant reservation system. It provides a REST API to book rest
 - Integrational Testing:
     - Test Containers
     -  WebApplication Factory
-
-## Features
-
-_in progress..._
-
+    - 
 ## Project Architecture
+
 This project is structured using **Clean Architecture** pattern
 
 <p align="center">
@@ -68,6 +56,10 @@ BookRest.Infrastructure// Data access, external services
 BookRest.Api           // Controllers, middleware, DI setup
 BookRest.Shared        // Centralise service name constants
 ```
+
+## Architecture Decisions
+
+While building and structuring BookRest I had to deal with various problems, they are documented at [docs/decisions](docs/decisions)
 
 ## Database schema
 
