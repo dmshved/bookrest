@@ -1,5 +1,5 @@
 <p align="center">
-<img width="120" src="https://images2.imgbox.com/a9/16/2Uwa3gC7_o.png" alt="BookRest logo">
+<img width="120" src="./docs/images/bookrest.png" alt="BookRest logo">
 </p>
 
 <h1 align="center">Restaurant Reservation System</h1>
