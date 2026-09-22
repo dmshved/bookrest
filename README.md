@@ -29,7 +29,7 @@ BookRest is a restaurant reservation system. It provides a REST API to book rest
     - JWT (Refresh + Access tokens)
 - Payment Service:
     - Stripe
-- Event Handling:
+- CQRS & Event Handling:
     - MediatR
 - Validation:
     - FluentValidation
@@ -40,7 +40,7 @@ BookRest is a restaurant reservation system. It provides a REST API to book rest
 - Integrational Testing:
     - Test Containers
     -  WebApplication Factory
-    - 
+
 ## Project Architecture
 
 This project is structured using **Clean Architecture** pattern
@@ -50,11 +50,11 @@ This project is structured using **Clean Architecture** pattern
 </p>
 
 ```
-BookRest.Domain        // Entities, value objects, domain events
-BookRest.Application   // Use cases, interfaces, DTOs
-BookRest.Infrastructure// Data access, external services
-BookRest.Api           // Controllers, middleware, DI setup
-BookRest.Shared        // Centralise service name constants
+BookRest.Domain          // Entities, value objects, domain events
+BookRest.Application     // Use cases, interfaces, DTOs
+BookRest.Infrastructure  // Data access, external services
+BookRest.Api             // Controllers, middleware, DI setup
+BookRest.Shared          // Centralise service name constants
 ```
 
 ## Architecture Decisions
