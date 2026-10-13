@@ -8,13 +8,13 @@ namespace BookRest.Infrastructure.Data.Interceptors;
 
 public class AuditableEntityInterceptor : SaveChangesInterceptor
 {
-    private readonly IUser _user;
-    private readonly TimeProvider _dateTime;
+    private readonly ICurrentUserService _currentUserService;
+    private readonly IClock _clock;
 
-    public AuditableEntityInterceptor(IUser user, TimeProvider dateTime)
+    public AuditableEntityInterceptor(ICurrentUserService currentUserService, IClock clock)
     {
-        _user = user;
-        _dateTime = dateTime;
+        _currentUserService = currentUserService;
+        _clock = clock;
     }
 
     public override InterceptionResult<int> SavingChanges(DbContextEventData eventData, InterceptionResult<int> result)
@@ -33,20 +33,25 @@ public class AuditableEntityInterceptor : SaveChangesInterceptor
 
     public void UpdateEntities(DbContext? context)
     {
-        if (context == null) return;
+        if (context == null)
+        {
+            return;
+        }
 
         foreach (var entry in context.ChangeTracker.Entries<BaseAuditableEntity>())
         {
             if (entry.State is EntityState.Added or EntityState.Modified || entry.HasChangedOwnedEntities())
             {
-                var utcNow = _dateTime.GetUtcNow();
+                var now = _clock.GetCurrentInstant();
+
                 if (entry.State == EntityState.Added)
                 {
-                    entry.Entity.CreatedBy = _user.Id;
-                    entry.Entity.Created = utcNow;
+                    entry.Entity.CreatedBy = _currentUserService.ApplicationUserId;
+                    entry.Entity.CreatedAt = now;
                 }
-                entry.Entity.LastModifiedBy = _user.Id;
-                entry.Entity.LastModified = utcNow;
+
+                entry.Entity.ModifiedBy = _currentUserService.ApplicationUserId;
+                entry.Entity.ModifiedAt = now;
             }
         }
     }
