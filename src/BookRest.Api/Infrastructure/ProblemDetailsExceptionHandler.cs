@@ -8,8 +8,8 @@ namespace BookRest.Api.Infrastructure;
 
 /// <summary>
 /// Converts well-known application exceptions into RFC 9110-compliant <see cref="ProblemDetails"/> responses,
-/// mapping <see cref="ValidationException"/> → 400, <see cref="NotFoundException"/> → 404,
-/// <see cref="UnauthorizedAccessException"/> → 401, and <see cref="ForbiddenAccessException"/> → 403.
+/// mapping <see cref="ValidationException"/> - 400, <see cref="NotFoundException"/> - 404,
+/// <see cref="UnauthorizedAccessException"/> - 401, and <see cref="ForbiddenAccessException"/> - 403.
 /// Unrecognised exceptions are not handled and fall through to the default middleware.
 /// </summary>
 public class ProblemDetailsExceptionHandler : IExceptionHandler
@@ -45,7 +45,10 @@ public class ProblemDetailsExceptionHandler : IExceptionHandler
             _ => (-1, null)
         };
 
-        if (problemDetails is null) return false;
+        if (problemDetails is null)
+        {
+            return false;
+        }
 
         httpContext.Response.StatusCode = statusCode;
         await httpContext.Response.WriteAsJsonAsync(problemDetails, cancellationToken);
