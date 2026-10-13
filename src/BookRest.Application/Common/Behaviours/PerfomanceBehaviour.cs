@@ -4,18 +4,21 @@ using System.Diagnostics;
 
 namespace BookRest.Application.Common.Behaviours;
 
-public class PerfomanceBehaviour<TRequest, TResponse> : IPipelineBehavior<TRequest, TResponse>
+public partial class PerfomanceBehaviour<TRequest, TResponse> : IPipelineBehavior<TRequest, TResponse>
     where TRequest : notnull
 {
     private readonly Stopwatch _timer = new Stopwatch();
     private readonly ILogger<TRequest> _logger;
-    private readonly IUser _user;
+    private readonly ICurrentUserService _currentUserService;
     private readonly IIdentityService _identityService;
 
-    public PerfomanceBehaviour(ILogger<TRequest> logger, IUser user, IIdentityService identityService)
+    public PerfomanceBehaviour(
+        ILogger<TRequest> logger,
+        ICurrentUserService currentUserService,
+        IIdentityService identityService)
     {
         _logger = logger;
-        _user = user;
+        _currentUserService = currentUserService;
         _identityService = identityService;
     }
 
@@ -23,7 +26,7 @@ public class PerfomanceBehaviour<TRequest, TResponse> : IPipelineBehavior<TReque
     {
         _timer.Start();
 
-        var response = await next();
+        var response = await next(cancellationToken);
 
         _timer.Stop();
 
@@ -32,18 +35,27 @@ public class PerfomanceBehaviour<TRequest, TResponse> : IPipelineBehavior<TReque
         if (elapsedMilliseconds > 500)
         {
             var requestName = typeof(TRequest).Name;
-            var userId = _user.Id ?? string.Empty;
+            var applicationUserId = _currentUserService.ApplicationUserId;
             var userName = string.Empty;
 
-            if (!string.IsNullOrEmpty(userId))
+            if (applicationUserId.HasValue)
             {
-                userName = await _identityService.GetUserNameAsync(userId);
+                userName = await _identityService.GetUserNameAsync(applicationUserId.Value);
             }
 
-            _logger.LogWarning("BookRest Long Running Request: {Name} ({ElapsedMilliseconds} milliseconds) {@UserId} {@UserName} {@Request}",
-                requestName, elapsedMilliseconds, userId, userName, request);
+            LogRequest(requestName, elapsedMilliseconds, applicationUserId, userName, request);
         }
 
         return response;
     }
+
+    [LoggerMessage(
+        Level = LogLevel.Warning,
+        Message = "BookRest Long Running Request: {Name} ({ElapsedMilliseconds} milliseconds) {@ApplicationUserId} {@UserName} {@Request}")]
+    private partial void LogRequest(
+        string name,
+        long elapsedMilliseconds,
+        Guid? applicationUserId,
+        string? userName,
+        TRequest request);
 }

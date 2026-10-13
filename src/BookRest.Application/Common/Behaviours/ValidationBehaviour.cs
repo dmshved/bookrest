@@ -12,7 +12,7 @@ public class ValidationBehaviour<TRequest, TResponse> : IPipelineBehavior<TReque
         _validators = validators;
     }
 
-    public async Task<TResponse> Handle(TRequest request, RequestHandlerDelegate<TResponse> next,CancellationToken cancellationToken)
+    public async Task<TResponse> Handle(TRequest request, RequestHandlerDelegate<TResponse> next, CancellationToken cancellationToken)
     {
         if (_validators.Any())
         {
@@ -20,7 +20,7 @@ public class ValidationBehaviour<TRequest, TResponse> : IPipelineBehavior<TReque
                 _validators.Select(v => v.ValidateAsync(new ValidationContext<TRequest>(request), cancellationToken)));
 
             var failures = validationResults
-                .Where(r => r.Errors.Any())
+                .Where(r => r.Errors.Count > 0)
                 .SelectMany(r => r.Errors)
                 .ToList();
 
@@ -30,6 +30,6 @@ public class ValidationBehaviour<TRequest, TResponse> : IPipelineBehavior<TReque
             }
         }
 
-        return await next();
+        return await next(cancellationToken);
     }
 }

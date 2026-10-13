@@ -2,7 +2,7 @@
 
 namespace BookRest.Application.Common.Behaviours;
 
-public class UnhandledExceptionBehaviour<TRequest, TResponse> : IPipelineBehavior<TRequest, TResponse>
+public partial class UnhandledExceptionBehaviour<TRequest, TResponse> : IPipelineBehavior<TRequest, TResponse>
     where TRequest : notnull
 {
     private readonly ILogger<TRequest> _logger;
@@ -16,15 +16,23 @@ public class UnhandledExceptionBehaviour<TRequest, TResponse> : IPipelineBehavio
     {
         try
         {
-            return await next();
+            return await next(cancellationToken);
         }
-        catch (Exception ex)
+        catch (Exception exception)
         {
             var requestName = typeof(TRequest).Name;
 
-            _logger.LogError(ex, "BookRest Request: Unhandled Exception for Request {Name} {@Request}", requestName, request);
+            LogException(exception, requestName, request);
 
             throw;
         }
     }
+
+    [LoggerMessage(
+        LogLevel.Error,
+        Message = "BookRest Request: Unhandled Exception for Request {Name} {@Request}")]
+    private partial void LogException(
+        Exception exception,
+        string name,
+        TRequest request);
 }
