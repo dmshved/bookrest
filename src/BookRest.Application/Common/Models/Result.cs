@@ -2,15 +2,14 @@
 
 public class Result
 {
+    public bool Succeeded { get; init; }
+    public IReadOnlyList<string> Errors { get; init; }
+
     internal Result(bool succeeded, IEnumerable<string> errors)
     {
         Succeeded = succeeded;
         Errors = errors.ToArray();
     }
-
-    public bool Succeeded { get; init; }
-
-    public string[] Errors { get; init; }
 
     public static Result Success()
     {
