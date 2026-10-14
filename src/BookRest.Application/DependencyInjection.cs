@@ -10,17 +10,19 @@ public static class DependencyInjection
 {
     public static void AddApplicationServices(this IHostApplicationBuilder builder)
     {
-        // TODO: Register AutoMapper profiles
-        // TODO: Register FluentValidation validators
+        builder.Services.AddAutoMapper(config =>
+            config.AddMaps(Assembly.GetExecutingAssembly()));
 
-        builder.Services.AddMediatR(cfg =>
+        builder.Services.AddValidatorsFromAssembly(Assembly.GetExecutingAssembly());
+
+        builder.Services.AddMediatR(config =>
         {
-            cfg.RegisterServicesFromAssembly(Assembly.GetExecutingAssembly());
-            cfg.AddOpenRequestPreProcessor(typeof(LoggingBehaviour<>));
-            cfg.AddOpenBehavior(typeof(UnhandledExceptionBehaviour<,>));
-            cfg.AddOpenBehavior(typeof(AuthorizationBehaviour<,>));
-            cfg.AddOpenBehavior(typeof(ValidationBehaviour<,>));
-            cfg.AddOpenBehavior(typeof(PerfomanceBehaviour<,>));
+            config.RegisterServicesFromAssembly(Assembly.GetExecutingAssembly());
+            config.AddOpenRequestPreProcessor(typeof(LoggingBehaviour<>));
+            config.AddOpenBehavior(typeof(UnhandledExceptionBehaviour<,>));
+            config.AddOpenBehavior(typeof(AuthorizationBehaviour<,>));
+            config.AddOpenBehavior(typeof(ValidationBehaviour<,>));
+            config.AddOpenBehavior(typeof(PerfomanceBehaviour<,>));
         });
     }
 }
