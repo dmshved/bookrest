@@ -34,7 +34,7 @@ Noda Time provides explicit types for different temporal concepts and makes time
 
 ## Rationale
 
-Noda Time makes the meaning of a time value explicit it's free, open source and was built by John Skeet (should I go on? Or is this reason enough? 😄). Developers cannot accidentally treat a local time as UTC or vice versa without making that decision visible in the code.
+Noda Time makes the meaning of a time value explicit - it's free, open source and was built by John Skeet (should I go on? Or is this reason enough? 😄). Developers cannot accidentally treat a local time as UTC or vice versa without making that decision visible in the code.
 
 It provides well-defined handling of time zones and DST and follows established standards for date and time calculations, which reduces the risk of time-related bugs and makes the original intent of the code easier to understand.
 

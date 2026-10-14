@@ -1,4 +1,4 @@
-# ADR-002: Use JWT Access Tokens, Refresh Tokens and Refresh Token Rotation
+# ADR-002: Use JWT access tokens, refresh tokens and refresh token rotation
 
 ## Status
 
