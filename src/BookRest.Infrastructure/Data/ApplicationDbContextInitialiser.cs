@@ -1,9 +1,9 @@
-﻿// See Database Initialisation Strategies https://jasontaylor.dev/ef-core-database-initialisation-strategies/
-// See Applying Migrations https://learn.microsoft.com/en-us/ef/core/managing-schemas/migrations/applying?tabs=dotnet-core-cli
+﻿// See Database Initialisation Strategies at https://jasontaylor.dev/ef-core-database-initialisation-strategies/
+// See Applying Migrations at https://learn.microsoft.com/en-us/ef/core/managing-schemas/migrations/applying?tabs=dotnet-core-cli
 // Currently Eearly Development strategy
 
 using BookRest.Domain.Constants;
-using BookRest.Infrastructure.Identity;
+using BookRest.Infrastructure.Identity.Models;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.DependencyInjection;
@@ -29,13 +29,13 @@ public class ApplicationDbContextInitialiser
     private readonly ILogger<ApplicationDbContextInitialiser> _logger;
     private readonly ApplicationDbContext _context;
     private readonly UserManager<ApplicationUser> _userManager;
-    private readonly RoleManager<IdentityRole> _roleManager;
+    private readonly RoleManager<ApplicationRole> _roleManager;
 
     public ApplicationDbContextInitialiser(
             ILogger<ApplicationDbContextInitialiser> logger,
             ApplicationDbContext context,
             UserManager<ApplicationUser> userManager,
-            RoleManager<IdentityRole> roleManager)
+            RoleManager<ApplicationRole> roleManager)
     {
         _logger = logger;
         _context = context;
@@ -73,22 +73,23 @@ public class ApplicationDbContextInitialiser
     public async Task TrySeedAsync()
     {
         // Default roles
-        var administratorRole = new IdentityRole(Roles.Administrator);
-
-        if (_roleManager.Roles.All(r => r.Name != administratorRole.Name))
+        foreach (var role in Roles.All())
         {
-            await _roleManager.CreateAsync(administratorRole);
+            if (!await _roleManager.RoleExistsAsync(role))
+            {
+                await _roleManager.CreateAsync(new ApplicationRole(role));
+            }
         }
 
         // Default users
         var administrator = new ApplicationUser { UserName = "administrator@localhost", Email = "administrator@localhost" };
 
-        if (_userManager.Users.All(u => u.UserName != administrator.UserName))
+        if (await _userManager.FindByNameAsync(administrator.UserName) == null)
         {
             await _userManager.CreateAsync(administrator, "Administrator1!");
-            if (!string.IsNullOrWhiteSpace(administratorRole.Name))
+            if (!string.IsNullOrWhiteSpace(Roles.Administrator))
             {
-                await _userManager.AddToRolesAsync(administrator, new [] { administratorRole.Name });
+                await _userManager.AddToRolesAsync(administrator, new[] { Roles.Administrator });
             }
         }
     }
