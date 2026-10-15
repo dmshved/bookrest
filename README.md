@@ -4,8 +4,6 @@
 
 <h1 align="center">Restaurant Reservation System</h1>
 
-## Project description
-
 BookRest is a restaurant reservation system. It provides a REST API to book restaurant tables clearly and painless.
 
 ## Table of Contents
