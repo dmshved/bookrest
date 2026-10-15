@@ -16,6 +16,7 @@ public static class DependencyInjection
 
         builder.Services.AddHttpContextAccessor();
 
+        builder.Services.AddProblemDetails();
         builder.Services.AddExceptionHandler<ProblemDetailsExceptionHandler>();
 
         // Configure default API behaviour so I have the full control over exception handling.

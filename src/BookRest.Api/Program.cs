@@ -38,6 +38,7 @@ app.UseExceptionHandler(options => { });
 
 app.Map("/", () => Results.Redirect("/scalar"));
 
+app.UseAuthentication();
 app.UseAuthorization();
 
 app.MapControllers();

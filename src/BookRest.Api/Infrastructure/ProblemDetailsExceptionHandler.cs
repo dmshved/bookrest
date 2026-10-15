@@ -14,27 +14,35 @@ namespace BookRest.Api.Infrastructure;
 /// </summary>
 public class ProblemDetailsExceptionHandler : IExceptionHandler
 {
+    private readonly IProblemDetailsService _problemDetailsService;
+
+    public ProblemDetailsExceptionHandler(IProblemDetailsService problemDetailsService)
+    {
+        _problemDetailsService = problemDetailsService;
+    }
+
     public async ValueTask<bool> TryHandleAsync(HttpContext httpContext, Exception exception, CancellationToken cancellationToken)
     {
         var (statusCode, problemDetails) = exception switch
         {
-            ValidationException ve => (StatusCodes.Status400BadRequest, (ProblemDetails)new ValidationProblemDetails(ve.Errors)
+            ValidationException validationException => (StatusCodes.Status400BadRequest, new ValidationProblemDetails(validationException.Errors)
             {
                 Status = StatusCodes.Status400BadRequest,
                 Type = "https://tools.ietf.org/html/rfc9110#section-15.5.1"
             }),
-            NotFoundException ne => (StatusCodes.Status404NotFound, new ProblemDetails
+            NotFoundException notFoundException => (StatusCodes.Status404NotFound, new ProblemDetails
             {
                 Status = StatusCodes.Status404NotFound,
                 Type = "https://tools.ietf.org/html/rfc9110#section-15.5.5",
                 Title = "The specified resource was not found.",
-                Detail = ne.Message
+                Detail = notFoundException.Message
             }),
-            UnauthorizedAccessException => (StatusCodes.Status401Unauthorized, new ProblemDetails
+            UnauthorizedAccessException unauthorizedAccessException => (StatusCodes.Status401Unauthorized, new ProblemDetails
             {
                 Status = StatusCodes.Status401Unauthorized,
                 Title = "Unauthorized",
-                Type = "https://tools.ietf.org/html/rfc9110#section-15.5.2"
+                Type = "https://tools.ietf.org/html/rfc9110#section-15.5.2",
+                Detail = unauthorizedAccessException.Message
             }),
             ForbiddenAccessException => (StatusCodes.Status403Forbidden, new ProblemDetails
             {
@@ -51,7 +59,12 @@ public class ProblemDetailsExceptionHandler : IExceptionHandler
         }
 
         httpContext.Response.StatusCode = statusCode;
-        await httpContext.Response.WriteAsJsonAsync(problemDetails, cancellationToken);
-        return true;
+
+        return await _problemDetailsService.TryWriteAsync(new ProblemDetailsContext
+        {
+            HttpContext = httpContext,
+            Exception = exception,
+            ProblemDetails = problemDetails
+        });
     }
 }
