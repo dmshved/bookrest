@@ -1,4 +1,5 @@
-﻿using BookRest.Application.Features.Authentication.Commands.Login;
+﻿using BookRest.Api.Extensions;
+using BookRest.Application.Features.Authentication.Commands.Login;
 using BookRest.Application.Features.Authentication.Common;
 using Microsoft.AspNetCore.Mvc;
 
@@ -25,6 +26,6 @@ public class AuthController : ControllerBase
     {
         var command = new LoginCommand(request.Email, request.Password);
         var response = await _mediator.Send(command);
-        return Ok(response);
+        return response.ToHttpResult(this);
     }
 }

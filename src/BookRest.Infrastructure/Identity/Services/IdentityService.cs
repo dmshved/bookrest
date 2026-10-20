@@ -1,6 +1,6 @@
 ﻿using BookRest.Application.Common.Interfaces;
-using BookRest.Application.Common.Models;
 using BookRest.Application.Features.Authentication.Common;
+using BookRest.Domain.Shared;
 using BookRest.Infrastructure.Identity.Models;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
@@ -81,17 +81,17 @@ internal class IdentityService : IIdentityService
         return user != null && await _userManager.CheckPasswordAsync(user, password);
     }
 
-    public async Task<(Result, Guid applicationUserId)> CreateUserAsync(string userName, string password)
+    public async Task<Result<Guid>> CreateUserAsync(string userName, string email, string password)
     {
         var user = new ApplicationUser
         {
             UserName = userName,
-            Email = userName
+            Email = email
         };
 
         var result = await _userManager.CreateAsync(user, password);
 
-        return (result.ToApplicationResult(), user.Id);
+        return result.ToApplicationResult(user.Id);
     }
 
     public async Task<Result> DeleteUserAsync(Guid applicationUserId)

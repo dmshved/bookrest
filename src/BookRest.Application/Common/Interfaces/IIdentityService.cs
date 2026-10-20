@@ -1,5 +1,5 @@
-﻿using BookRest.Application.Common.Models;
-using BookRest.Application.Features.Authentication.Common;
+﻿using BookRest.Application.Features.Authentication.Common;
+using BookRest.Domain.Shared;
 
 namespace BookRest.Application.Common.Interfaces;
 
@@ -14,6 +14,6 @@ public interface IIdentityService
     Task<bool> AuthorizeAsync(Guid applicationUserId, string policyName);
     Task<bool> CheckPasswordAsync(Guid applicationUserId, string policyName);
 
-    Task<(Result, Guid applicationUserId)> CreateUserAsync(string userName, string password);
+    Task<Result<Guid>> CreateUserAsync(string userName, string email, string password);
     Task<Result> DeleteUserAsync(Guid applicationUserId);
 }
