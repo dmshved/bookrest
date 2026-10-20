@@ -7,6 +7,7 @@ public interface ICustomerRepository
 {
     Task<Customer?> GetByApplicationUserIdAsync(Guid applicationUserId, CancellationToken cancellationToken = default);
     Task<Customer?> GetByEmailAsync(Email email, CancellationToken cancellationToken = default);
+    Task<bool> ExistsByEmailAsync(Email email, CancellationToken cancellationToken = default);
 
     void Add(Customer customer);
     void Update(Customer customer);

@@ -1,5 +1,8 @@
 ﻿namespace BookRest.Domain.Constants;
 
+/// <summary>
+/// Represents a container class for the Roles.
+/// </summary>
 public static class Roles
 {
     public const string Customer = nameof(Customer);

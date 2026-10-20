@@ -1,7 +1,9 @@
 ﻿namespace BookRest.Domain.Constants;
 
-// A container class for the Policies
-public abstract class Policies
+/// <summary>
+/// Represents a container class for the Policies.
+/// </summary>
+public static class Policies
 {
     public const string CanPurge = nameof(CanPurge);
 }

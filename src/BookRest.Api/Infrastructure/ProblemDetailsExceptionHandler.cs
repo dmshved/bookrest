@@ -34,7 +34,7 @@ public class ProblemDetailsExceptionHandler : IExceptionHandler
             {
                 Status = StatusCodes.Status404NotFound,
                 Type = "https://tools.ietf.org/html/rfc9110#section-15.5.5",
-                Title = "The specified resource was not found.",
+                Title = "Not found",
                 Detail = notFoundException.Message
             }),
             UnauthorizedAccessException unauthorizedAccessException => (StatusCodes.Status401Unauthorized, new ProblemDetails
