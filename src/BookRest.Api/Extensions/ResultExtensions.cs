@@ -17,7 +17,7 @@ public static class ResultExtensions
 
         var error = result.Error!.Value;
 
-        return MapError(error, controller);
+        return ToProblem(error, controller);
     }
 
     /// <summary>
@@ -32,13 +32,13 @@ public static class ResultExtensions
 
         var error = result.Error!.Value;
 
-        return MapError(error, controller);
+        return ToProblem(error, controller);
     }
 
     /// <summary>
     /// Maps Error into RFC 9110-compliant <see cref="ProblemDetails"/> responses.
     /// </summary>
-    private static IActionResult MapError(Error error, ControllerBase controller)
+    private static IActionResult ToProblem(Error error, ControllerBase controller)
     {
         var (statusCode, problemDetails) = error.ErrorType switch
         {

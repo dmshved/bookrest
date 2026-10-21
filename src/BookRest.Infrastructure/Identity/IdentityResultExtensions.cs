@@ -11,7 +11,8 @@ public static class IdentityResultExtensions
             ? Result<T>.Success(value)
             : Result<T>.Failure(
                 new Error("Identity.OperationFailed",
-                    string.Join("; ", result.Errors.Select(e => e.Description))));
+                    string.Join("; ", result.Errors.Select(e => e.Description)),
+                    ErrorType.Validation));
     }
 
     public static Result ToApplicationResult(this IdentityResult result)
@@ -19,6 +20,8 @@ public static class IdentityResultExtensions
         return result.Succeeded
             ? Result.Success()
             : Result.Failure(
-                new Error("Identity.OperationFailed", string.Join("; ", result.Errors.Select(e => e.Description))));
+                new Error("Identity.OperationFailed",
+                    string.Join("; ", result.Errors.Select(e => e.Description)),
+                    ErrorType.Validation));
     }
 }
