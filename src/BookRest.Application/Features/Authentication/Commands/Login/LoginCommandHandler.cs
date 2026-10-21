@@ -42,9 +42,9 @@ public class LoginCommandHandler : IRequestHandler<LoginCommand, Result<Authenti
         var (accessTokenValue, accessTokenExpiresAt) = _tokenProvider.GenerateAccessToken(userInfo, roles);
         var (refreshTokenValue, refreshTokenExpiresAt) = _tokenProvider.GenerateRefreshToken();
 
-        // Store refresh token in the database
         var refreshToken = RefreshToken.Create(refreshTokenValue, refreshTokenExpiresAt, userInfo.ApplicationUserId);
 
+        // Store refresh token in the database
         _refreshTokenRepository.Add(refreshToken);
         await _unitOfWork.SaveChangesAsync(cancellationToken);
 

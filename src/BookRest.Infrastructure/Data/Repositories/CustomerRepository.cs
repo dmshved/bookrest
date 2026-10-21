@@ -24,13 +24,13 @@ public class CustomerRepository : ICustomerRepository
     public Task<Customer?> GetByEmailAsync(Email email, CancellationToken cancellationToken = default)
     {
         return _context.Customers
-            .FirstOrDefaultAsync(c => c.Email.Value == email.Value, cancellationToken);
+            .FirstOrDefaultAsync(c => c.Email == email, cancellationToken);
     }
 
     public Task<bool> ExistsByEmailAsync(Email email, CancellationToken cancellationToken = default)
     {
         return _context.Customers
-            .AnyAsync(c => c.Email.Value == email.Value, cancellationToken);
+            .AnyAsync(c => c.Email == email, cancellationToken);
     }
 
     public void Add(Customer customer)
