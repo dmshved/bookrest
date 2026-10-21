@@ -1,4 +1,6 @@
-﻿namespace BookRest.Domain.Entities;
+﻿using BookRest.Domain.Errors;
+
+namespace BookRest.Domain.Entities;
 
 public sealed class RefreshToken : BaseAuditableEntity
 {
@@ -27,16 +29,18 @@ public sealed class RefreshToken : BaseAuditableEntity
         };
     }
 
-    public void Revoke(Instant revokedAt, string? reason = null, string? replacedByToken = null)
+    public Result Revoke(Instant revokedAt, string? reason = null, string? replacedByToken = null)
     {
         if (IsRevoked)
         {
-            throw new InvalidOperationException("Token is already revoked.");
+            return Result.Failure(RefreshTokenErrors.AlreadyRevoked());
         }
 
         RevokedAt = revokedAt;
         ReplacedByToken = replacedByToken;
         ReasonRevoked = reason;
+
+        return Result.Success();
     }
 
     public bool IsExpired(Instant now)

@@ -15,6 +15,11 @@ public static class CustomerErrors
             "Invalid email format.",
             ErrorType.Validation);
 
+    public static Error AlreadyExists(string email) =>
+        new("Customer.AlreadyExists",
+            $"Customer with specified '{email}' already exists.",
+            ErrorType.Validation);
+
     public static Error NotFoundById(Guid id) =>
         new("Customer.NotFoundById",
             $"Customer with specified id '{id}' was not found.",
