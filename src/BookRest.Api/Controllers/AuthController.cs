@@ -1,4 +1,4 @@
-﻿using BookRest.Api.Extensions;
+﻿using BookRest.Api.Abstractions;
 using BookRest.Application.Features.Authentication.Commands.Login;
 using BookRest.Application.Features.Authentication.Commands.RegisterCustomer;
 using BookRest.Application.Features.Authentication.Common;
@@ -6,15 +6,11 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace BookRest.Api.Controllers;
 
-[ApiController]
 [Route("api/v1/[controller]")]
-public class AuthController : ControllerBase
+public class AuthController : ApiController
 {
-    private readonly IMediator _mediator;
-
-    public AuthController(IMediator mediator)
+    public AuthController(ISender sender) : base(sender)
     {
-        _mediator = mediator;
     }
 
     /// <summary>
@@ -26,8 +22,9 @@ public class AuthController : ControllerBase
     public async Task<IActionResult> Login([FromBody] LoginRequestDto request)
     {
         var command = new LoginCommand(request.Email, request.Password);
-        var response = await _mediator.Send(command);
-        return response.ToHttpResult(this);
+        var result = await Sender.Send(command);
+
+        return ToHttpResult(result);
     }
 
     /// <summary>
@@ -39,7 +36,8 @@ public class AuthController : ControllerBase
     public async Task<IActionResult> RegisterCustomer([FromBody] RegisterCustomerRequestDto request)
     {
         var command = new RegisterCustomerCommand(request.UserName, request.Email, request.Password, request.ConfirmPassword);
-        var response = await _mediator.Send(command);
-        return response.ToHttpResult(this);
+        var result = await Sender.Send(command);
+
+        return ToHttpResult(result);
     }
 }

@@ -8,20 +8,24 @@ public static class IdentityResultExtensions
     public static Result<T> ToApplicationResult<T>(this IdentityResult result, T value)
     {
         return result.Succeeded
-            ? Result<T>.Success(value)
-            : Result<T>.Failure(
-                new Error("Identity.OperationFailed",
-                    string.Join("; ", result.Errors.Select(e => e.Description)),
-                    ErrorType.Validation));
+            ? ValidationResult<T>.Success(value)
+            : ValidationResult<T>.WithErrors(result.Errors
+                .Select(error => new Error(
+                    code: error.Code,
+                    description: error.Description,
+                    errorType: ErrorType.Validation))
+                .ToArray());
     }
 
     public static Result ToApplicationResult(this IdentityResult result)
     {
         return result.Succeeded
-            ? Result.Success()
-            : Result.Failure(
-                new Error("Identity.OperationFailed",
-                    string.Join("; ", result.Errors.Select(e => e.Description)),
-                    ErrorType.Validation));
+            ? ValidationResult.Success()
+            : ValidationResult.WithErrors(result.Errors
+                .Select(error => new Error(
+                    code: error.Code,
+                    description: error.Description,
+                    errorType: ErrorType.Validation))
+                .ToArray());
     }
 }

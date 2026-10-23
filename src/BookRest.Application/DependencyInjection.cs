@@ -13,7 +13,7 @@ public static class DependencyInjection
         builder.Services.AddAutoMapper(config =>
             config.AddMaps(Assembly.GetExecutingAssembly()));
 
-        builder.Services.AddValidatorsFromAssembly(Assembly.GetExecutingAssembly());
+        builder.Services.AddValidatorsFromAssembly(Assembly.GetExecutingAssembly(), includeInternalTypes: true);
 
         builder.Services.AddMediatR(config =>
         {

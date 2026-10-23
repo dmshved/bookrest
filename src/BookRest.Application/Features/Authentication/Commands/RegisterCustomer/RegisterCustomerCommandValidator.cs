@@ -1,6 +1,6 @@
 ﻿namespace BookRest.Application.Features.Authentication.Commands.RegisterCustomer;
 
-public class RegisterCustomerCommandValidator : AbstractValidator<RegisterCustomerCommand>
+internal class RegisterCustomerCommandValidator : AbstractValidator<RegisterCustomerCommand>
 {
     public RegisterCustomerCommandValidator()
     {

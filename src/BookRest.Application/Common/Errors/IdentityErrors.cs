@@ -6,6 +6,6 @@ public static class IdentityErrors
 {
     public static Error InvalidCredentials() =>
         new("Login.InvalidCredentials",
-            "Invalid credentials.",
+            "Invalid email or password.",
             ErrorType.Unauthorized);
 }

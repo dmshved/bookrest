@@ -1,5 +1,6 @@
 ﻿using BookRest.Application.Common.Errors;
 using BookRest.Application.Common.Interfaces;
+using BookRest.Application.Common.Interfaces.Messaging;
 using BookRest.Application.Common.Interfaces.Repositories;
 using BookRest.Application.Features.Authentication.Common;
 using BookRest.Domain.Entities;
@@ -7,7 +8,7 @@ using BookRest.Domain.Shared;
 
 namespace BookRest.Application.Features.Authentication.Commands.Login;
 
-public class LoginCommandHandler : IRequestHandler<LoginCommand, Result<AuthenticationResponseDto>>
+public class LoginCommandHandler : ICommandHandler<LoginCommand, AuthenticationResponseDto>
 {
     private readonly IIdentityService _identityService;
     private readonly ITokenProvider _tokenProvider;

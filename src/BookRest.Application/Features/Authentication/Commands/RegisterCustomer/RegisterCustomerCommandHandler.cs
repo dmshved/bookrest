@@ -1,4 +1,5 @@
 ﻿using BookRest.Application.Common.Interfaces;
+using BookRest.Application.Common.Interfaces.Messaging;
 using BookRest.Application.Common.Interfaces.Repositories;
 using BookRest.Application.Features.Authentication.Common;
 using BookRest.Domain.Entities;
@@ -8,7 +9,7 @@ using BookRest.Domain.ValueObjects;
 
 namespace BookRest.Application.Features.Authentication.Commands.RegisterCustomer;
 
-public class RegisterCustomerCommandHandler : IRequestHandler<RegisterCustomerCommand, Result<AuthenticationResponseDto>>
+public class RegisterCustomerCommandHandler : ICommandHandler<RegisterCustomerCommand, AuthenticationResponseDto>
 {
     private readonly IIdentityService _identityService;
     private readonly ICustomerRepository _customerRepository;
@@ -41,8 +42,13 @@ public class RegisterCustomerCommandHandler : IRequestHandler<RegisterCustomerCo
 
         var result = await _identityService.CreateUserAsync(request.UserName, request.Email, request.Password);
 
-        if (!result.IsSuccess)
+        if (result.IsFailure)
         {
+            if (result is IValidationResult validationResult)
+            {
+                return ValidationResult<AuthenticationResponseDto>.WithErrors(validationResult.Errors);
+            }
+
             return Result<AuthenticationResponseDto>.Failure(result.Error!.Value);
         }
 
