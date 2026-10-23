@@ -6,15 +6,17 @@
 public readonly record struct Error
 {
     public string Code { get; }
-    public string Message { get; }
+    public string Description { get; }
     public ErrorType ErrorType { get; }
 
-    public Error(string code, string message, ErrorType errorType = ErrorType.Failure)
+    public Error(string code, string description, ErrorType errorType = ErrorType.Failure)
     {
         Code = code;
-        Message = message;
+        Description = description;
         ErrorType = errorType;
     }
 
-    public override string ToString() => $"[{Code}]: {Message}";
+    public static readonly Error None = new(string.Empty, string.Empty);
+
+    public override string ToString() => $"[{Code}]: {Description}";
 }
