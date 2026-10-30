@@ -1,8 +1,8 @@
-﻿using BookRest.Application.Common.Interfaces;
+﻿using BookRest.Application.Common.Errors;
+using BookRest.Application.Common.Interfaces;
 using BookRest.Application.Features.Authentication.Common;
 using BookRest.Domain.Shared;
 using BookRest.Infrastructure.Identity.Models;
-using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 
 namespace BookRest.Infrastructure.Identity.Services;
@@ -11,16 +11,13 @@ internal class IdentityService : IIdentityService
 {
     private readonly UserManager<ApplicationUser> _userManager;
     private readonly IUserClaimsPrincipalFactory<ApplicationUser> _userClaimsPrincipalFactory;
-    private readonly IAuthorizationService _authorizationService;
 
     public IdentityService(
         UserManager<ApplicationUser> userManager,
-        IUserClaimsPrincipalFactory<ApplicationUser> userClaimsPrincipalFactory,
-        IAuthorizationService authorizationService)
+        IUserClaimsPrincipalFactory<ApplicationUser> userClaimsPrincipalFactory)
     {
         _userManager = userManager;
         _userClaimsPrincipalFactory = userClaimsPrincipalFactory;
-        _authorizationService = authorizationService;
     }
 
     public async Task<string?> GetUserNameAsync(Guid applicationUserId)
@@ -58,20 +55,23 @@ internal class IdentityService : IIdentityService
         return user != null && await _userManager.IsInRoleAsync(user, role);
     }
 
-    public async Task<bool> AuthorizeAsync(Guid applicationUserId, string policyName)
+    public async Task<Result> AddToRoleAsync(Guid applicationUserId, string role)
     {
         var user = await _userManager.FindByIdAsync(applicationUserId.ToString());
 
         if (user == null)
         {
-            return false;
+            return Result.Failure(IdentityErrors.NotFound(applicationUserId.ToString()));
         }
 
-        var principal = await _userClaimsPrincipalFactory.CreateAsync(user);
+        var result = await _userManager.AddToRoleAsync(user, role);
 
-        var result = await _authorizationService.AuthorizeAsync(principal, policyName);
+        if (!result.Succeeded)
+        {
+            return Result.Failure(IdentityErrors.FailedAddToRole(role));
+        }
 
-        return result.Succeeded;
+        return Result.Success();
     }
 
     public async Task<bool> CheckPasswordAsync(Guid applicationUserId, string password)

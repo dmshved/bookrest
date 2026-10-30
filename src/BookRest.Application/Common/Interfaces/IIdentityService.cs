@@ -11,7 +11,7 @@ public interface IIdentityService
     Task<IEnumerable<string>> GetRolesAsync(Guid applicationUserId);
 
     Task<bool> IsInRoleAsync(Guid applicationUserId, string role);
-    Task<bool> AuthorizeAsync(Guid applicationUserId, string policyName);
+    Task<Result> AddToRoleAsync(Guid applicationUserId, string role);
     Task<bool> CheckPasswordAsync(Guid applicationUserId, string policyName);
 
     Task<Result<Guid>> CreateUserAsync(string userName, string email, string password);
