@@ -3,6 +3,7 @@ using BookRest.Infrastructure.Data;
 using BookRest.Infrastructure.Data.Interceptors;
 using BookRest.Application.Common.Interfaces;
 using BookRest.Application.Common.Interfaces.Repositories;
+using BookRest.Infrastructure.Authorization;
 using BookRest.Infrastructure.Data.Options;
 using BookRest.Infrastructure.Data.Repositories;
 using BookRest.Infrastructure.Data.Setup;
@@ -13,6 +14,7 @@ using Microsoft.EntityFrameworkCore.Diagnostics;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Hosting;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.Extensions.Options;
 using NodaTime.Extensions;
 
@@ -78,6 +80,17 @@ public static class DependencyInjection
             })
             .AddRoles<ApplicationRole>()
             .AddEntityFrameworkStores<ApplicationDbContext>();
+
+        builder.Services.AddOptions<PermissionOptions>()
+            .BindConfiguration(PermissionOptions.SectionName);
+
+        builder.Services.AddScoped<IAuthorizationHandler, PermissionAuthorizationHandler>();
+        builder.Services.AddSingleton<IAuthorizationPolicyProvider, PermissionPolicyProvider>();
+        builder.Services.AddScoped<IPermissionService, PermissionService>();
+        // register cache service PermissionStore later
+
+        // add GrantAsync into the PermissionService and make an endpoint to grant new permissions to the role
+        // * optionally add endpoint to revoke permission
 
         builder.Services.AddSingleton(TimeProvider.System);
 
