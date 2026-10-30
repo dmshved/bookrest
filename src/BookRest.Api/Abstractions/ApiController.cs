@@ -80,7 +80,7 @@ public abstract class ApiController : ControllerBase
                     Status = StatusCodes.Status409Conflict,
                     Type = "https://www.rfc-editor.org/info/rfc9110/#section-15.5.10",
                     Title = "Conflict",
-                    Detail = error.Description,
+                    Detail = error.Description
                 }),
                 ErrorType.Unauthorized => (StatusCodes.Status401Unauthorized, new ProblemDetails
                 {

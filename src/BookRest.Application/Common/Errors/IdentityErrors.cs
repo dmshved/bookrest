@@ -2,6 +2,9 @@
 
 namespace BookRest.Application.Common.Errors;
 
+/// <summary>
+/// Represents application user errors.
+/// </summary>
 public static class IdentityErrors
 {
     public static Error InvalidCredentials() =>
