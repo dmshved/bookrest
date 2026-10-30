@@ -14,7 +14,7 @@ namespace BookRest.Infrastructure.Identity.Services;
 
 public class JwtTokenProvider : ITokenProvider
 {
-    private readonly JwtOptions _jwtOptions;
+    private readonly IOptions<JwtOptions> _jwtOptions;
     private readonly IClock _clock;
     private readonly string _securityAlgorithm;
     private readonly JsonWebTokenHandler _tokenHandler;
@@ -23,7 +23,7 @@ public class JwtTokenProvider : ITokenProvider
         IOptions<JwtOptions> jwtOptions,
         IClock clock)
     {
-        _jwtOptions = jwtOptions.Value;
+        _jwtOptions = jwtOptions;
         _clock = clock;
         _securityAlgorithm = SecurityAlgorithms.HmacSha256;
         // Learn more at https://learn.microsoft.com/en-us/aspnet/core/breaking-changes/8/securitytoken-events?view=aspnetcore-10.0
@@ -32,7 +32,8 @@ public class JwtTokenProvider : ITokenProvider
 
     public (string AccessToken, Instant ExpiresAt) GenerateAccessToken(ApplicationUserInfo user, IEnumerable<string> roles)
     {
-        var securityKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_jwtOptions.SecretKey));
+        var jwtOptions = _jwtOptions.Value;
+        var securityKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_jwtOptions.Value.SecretKey));
         var credentials = new SigningCredentials(securityKey, _securityAlgorithm);
         var now = _clock.GetCurrentInstant();
 
@@ -51,21 +52,23 @@ public class JwtTokenProvider : ITokenProvider
         var tokenDescriptor = new SecurityTokenDescriptor
         {
             Subject = new ClaimsIdentity(claims),
-            Expires = now.Plus(Duration.FromMinutes(_jwtOptions.AccessTokenExpirationMinutes)).ToDateTimeUtc(),
-            Issuer = _jwtOptions.Issuer,
-            Audience = _jwtOptions.Audience,
+            Expires = now.Plus(Duration.FromMinutes(jwtOptions.AccessTokenExpirationMinutes)).ToDateTimeUtc(),
+            Issuer = jwtOptions.Issuer,
+            Audience = jwtOptions.Audience,
             SigningCredentials = credentials,
             TokenType = "at+jwt" // OAuth 2.0 access token type (indicates that the content is a JWT access token)
         };
 
         var token = _tokenHandler.CreateToken(tokenDescriptor);
-        var expiresAt = now.Plus(Duration.FromMinutes(_jwtOptions.AccessTokenExpirationMinutes));
+        var expiresAt = now.Plus(Duration.FromMinutes(jwtOptions.AccessTokenExpirationMinutes));
 
         return (token, expiresAt);
     }
 
     public (string RefreshToken, Instant ExpiresAt) GenerateRefreshToken()
     {
+        var jwtOptions = _jwtOptions.Value;
+
         var now = _clock.GetCurrentInstant();
 
         var randomNumber = new byte[64];
@@ -74,23 +77,25 @@ public class JwtTokenProvider : ITokenProvider
         randomNumberGenerator.GetBytes(randomNumber);
 
         var token = Convert.ToBase64String(randomNumber);
-        var expiresAt = now.Plus(Duration.FromDays(_jwtOptions.RefreshTokenExpirationDays));
+        var expiresAt = now.Plus(Duration.FromDays(jwtOptions.RefreshTokenExpirationDays));
 
         return (token, expiresAt);
     }
 
     public async Task<ClaimsPrincipal?> GetPrincipalFromExpiredTokenAsync(string token)
     {
+        var jwtOptions = _jwtOptions.Value;
+
         var tokenValidationParameters = new TokenValidationParameters
         {
             ValidateIssuer = true,
-            ValidIssuer = _jwtOptions.Issuer,
+            ValidIssuer = jwtOptions.Issuer,
 
             ValidateAudience = true,
-            ValidAudience = _jwtOptions.Audience,
+            ValidAudience = jwtOptions.Audience,
 
             ValidateIssuerSigningKey = true,
-            IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_jwtOptions.SecretKey)),
+            IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(jwtOptions.SecretKey)),
 
             // We want to read expired tokens for refresh.
             ValidateLifetime = false,
