@@ -8,6 +8,7 @@ public interface IIdentityService
     Task<string?> GetUserNameAsync(Guid applicationUserId);
     Task<string?> GetUserEmailAsync(Guid applicationUserId);
     Task<ApplicationUserInfo?> GetByEmailAsync(string email);
+    Task<ApplicationUserInfo?> GetByIdAsync(Guid applicationUserId);
     Task<IEnumerable<string>> GetRolesAsync(Guid applicationUserId);
 
     Task<bool> IsInRoleAsync(Guid applicationUserId, string role);

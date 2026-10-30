@@ -41,6 +41,13 @@ internal class IdentityService : IIdentityService
         return user != null ? new ApplicationUserInfo(user.Id, user.UserName!, user.Email!) : null;
     }
 
+    public async Task<ApplicationUserInfo?> GetByIdAsync(Guid applicationUserId)
+    {
+        var user = await _userManager.FindByIdAsync(applicationUserId.ToString());
+
+        return user != null ? new ApplicationUserInfo(user.Id, user.UserName!, user.Email!) : null;
+    }
+
     public async Task<IEnumerable<string>> GetRolesAsync(Guid applicationUserId)
     {
         var user = await _userManager.FindByIdAsync(applicationUserId.ToString());
