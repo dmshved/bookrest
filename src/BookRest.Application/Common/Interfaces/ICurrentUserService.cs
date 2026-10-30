@@ -4,5 +4,5 @@ public interface ICurrentUserService
 {
     Guid? ApplicationUserId { get; }
     bool IsAuthenticated { get; }
-    IEnumerable<string>? Roles { get; }
+    IReadOnlyCollection<string> Roles { get; }
 }

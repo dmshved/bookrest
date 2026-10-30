@@ -1,4 +1,4 @@
-using System.Security.Claims;
+﻿using System.Security.Claims;
 using BookRest.Application.Common.Interfaces;
 
 namespace BookRest.Api.Services;
@@ -17,9 +17,7 @@ public class CurrentUserService : ICurrentUserService
         get
         {
             var id = _httpContextAccessor?
-                .HttpContext?
-                .User?
-                .FindFirstValue("application_user_id");
+                .HttpContext?.User?.FindFirstValue("application_user_id");
 
             return Guid.TryParse(id, out var applicationUserId)
                 ? applicationUserId
@@ -28,17 +26,11 @@ public class CurrentUserService : ICurrentUserService
     }
 
     public bool IsAuthenticated =>
-        _httpContextAccessor?
-            .HttpContext?
-            .User?
-            .Identity?
-            .IsAuthenticated ?? false;
+        _httpContextAccessor?.HttpContext?.User?.Identity?.IsAuthenticated ?? false;
 
-    public IEnumerable<string>? Roles =>
-        _httpContextAccessor?
-            .HttpContext?
-            .User?
+    public IReadOnlyCollection<string> Roles =>
+        _httpContextAccessor?.HttpContext?.User?
             .FindAll("role")
-            .Select(x => x.Value)
-            .ToList();
+            .Select(c => c.Value)
+            .ToList() ?? [];
 }
