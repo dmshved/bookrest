@@ -11,10 +11,7 @@ public class Owner : BaseAuditableEntity
 
     private Owner() { }
 
-    public static Owner Create(
-        Guid applicationUserId,
-        string userName,
-        Email email)
+    public static Owner Create(Guid applicationUserId, string userName, Email email)
     {
         return new Owner
         {
@@ -25,9 +22,7 @@ public class Owner : BaseAuditableEntity
         };
     }
 
-    public void Update(
-        string userName,
-        Email email)
+    public void Update(string userName, Email email)
     {
         UserName = userName;
         Email = email;

@@ -15,10 +15,7 @@ public sealed class RefreshToken : BaseAuditableEntity
 
     private RefreshToken() { }
 
-    public static RefreshToken Create(
-        string token,
-        Instant expiresAt,
-        Guid applicationUserId)
+    public static RefreshToken Create(string token, Instant expiresAt, Guid applicationUserId)
     {
         return new RefreshToken
         {

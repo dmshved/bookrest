@@ -11,10 +11,7 @@ public class Customer : BaseAuditableEntity
 
     private Customer() { }
 
-    public static Customer Create(
-        Guid applicationUserId,
-        string userName,
-        Email email)
+    public static Customer Create(Guid applicationUserId, string userName, Email email)
     {
         return new Customer
         {
@@ -25,9 +22,7 @@ public class Customer : BaseAuditableEntity
         };
     }
 
-    public void Update(
-        string userName,
-        Email email)
+    public void Update(string userName, Email email)
     {
         UserName = userName;
         Email = email;
