@@ -2,6 +2,7 @@
 using BookRest.Application.Common.Interfaces.Messaging;
 using BookRest.Application.Common.Interfaces.Repositories;
 using BookRest.Application.Features.Authentication.Common;
+using BookRest.Domain.Constants;
 using BookRest.Domain.Entities;
 using BookRest.Domain.Errors;
 using BookRest.Domain.Shared;
@@ -40,19 +41,27 @@ public class RegisterCustomerCommandHandler : ICommandHandler<RegisterCustomerCo
             return Result<AuthenticationResponseDto>.Failure(CustomerErrors.AlreadyExists(email.Value));
         }
 
-        var result = await _identityService.CreateUserAsync(request.UserName, request.Email, request.Password);
+        var userResult = await _identityService.CreateUserAsync(request.UserName, request.Email, request.Password);
 
-        if (result.IsFailure)
+        if (userResult.IsFailure)
         {
-            if (result is IValidationResult validationResult)
+            if (userResult is IValidationResult validationResult)
             {
                 return ValidationResult<AuthenticationResponseDto>.WithErrors(validationResult.Errors);
             }
 
-            return Result<AuthenticationResponseDto>.Failure(result.Error!.Value);
+            return Result<AuthenticationResponseDto>.Failure(userResult.Error!.Value);
         }
 
-        var customer = Customer.Create(result.Value, request.UserName, email);
+        var roleResult = await _identityService.AddToRoleAsync(userResult.Value, Roles.Customer);
+
+        if (roleResult.IsFailure)
+        {
+            await _identityService.DeleteUserAsync(userResult.Value);
+            return Result<AuthenticationResponseDto>.Failure(roleResult.Error!.Value);
+        }
+
+        var customer = Customer.Create(userResult.Value, request.UserName, email);
 
         _customerRepository.Add(customer);
         await _unitOfWork.SaveChangesAsync(cancellationToken);
