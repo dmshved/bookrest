@@ -2,6 +2,7 @@
 // See Applying Migrations at https://learn.microsoft.com/en-us/ef/core/managing-schemas/migrations/applying?tabs=dotnet-core-cli
 // Currently Eearly Development strategy
 
+using System.Security.Claims;
 using BookRest.Domain.Constants;
 using BookRest.Infrastructure.Identity.Models;
 using Microsoft.AspNetCore.Builder;
@@ -90,6 +91,57 @@ public class ApplicationDbContextInitialiser
             if (!string.IsNullOrWhiteSpace(Roles.Administrator))
             {
                 await _userManager.AddToRolesAsync(administrator, new[] { Roles.Administrator });
+            }
+        }
+
+        // Administrator permissions
+        await GrantAsync(Roles.Administrator, Permissions.All);
+
+        // Owner permissions
+        await GrantAsync(Roles.Owner,
+        [
+            Permissions.Restaurants.View,
+            Permissions.Restaurants.Create,
+            Permissions.Restaurants.Edit,
+            Permissions.Orders.View,
+            Permissions.Orders.Edit
+        ]);
+
+        // Customer permissions
+        await GrantAsync(Roles.Customer,
+        [
+            Permissions.Restaurants.View,
+            Permissions.Orders.View,
+            Permissions.Orders.Create
+        ]);
+    }
+
+    private async Task GrantAsync(string roleName, IEnumerable<string> permissions)
+    {
+        var role = await _roleManager.FindByNameAsync(roleName);
+
+        if (role == null)
+        {
+            throw new InvalidOperationException($"Role '{roleName}' was not found.");
+        }
+
+        var existingClaims = await _roleManager.GetClaimsAsync(role);
+
+        foreach (var permission in permissions)
+        {
+            if (existingClaims.Any(claim =>
+                    claim.Type == Permissions.ClaimType &&
+                    claim.Value == permission))
+            {
+                // Skip if permission is already persisted
+                continue;
+            }
+
+            var result = await _roleManager.AddClaimAsync(role, new Claim(Permissions.ClaimType, permission));
+
+            if (!result.Succeeded)
+            {
+                throw new InvalidOperationException($"Cannot grant permission '{permission}' to the role '{roleName}'.");
             }
         }
     }
