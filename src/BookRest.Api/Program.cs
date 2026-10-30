@@ -1,4 +1,4 @@
-using BookRest.Infrastructure.Data;
+﻿using BookRest.Infrastructure.Data;
 using Scalar.AspNetCore;
 
 var builder = WebApplication.CreateBuilder(args);

@@ -20,7 +20,6 @@ public static class DependencyInjection
             config.RegisterServicesFromAssembly(Assembly.GetExecutingAssembly());
             config.AddOpenRequestPreProcessor(typeof(LoggingBehaviour<>));
             config.AddOpenBehavior(typeof(UnhandledExceptionBehaviour<,>));
-            config.AddOpenBehavior(typeof(AuthorizationBehaviour<,>));
             config.AddOpenBehavior(typeof(ValidationBehaviour<,>));
             config.AddOpenBehavior(typeof(PerfomanceBehaviour<,>));
         });
