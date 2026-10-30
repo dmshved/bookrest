@@ -1,5 +1,6 @@
 ﻿using BookRest.Api.Abstractions;
 using BookRest.Application.Features.Authentication.Commands.Login;
+using BookRest.Application.Features.Authentication.Commands.Refresh;
 using BookRest.Application.Features.Authentication.Commands.RegisterCustomer;
 using BookRest.Application.Features.Authentication.Common;
 using Microsoft.AspNetCore.Mvc;
@@ -36,6 +37,20 @@ public class AuthController : ApiController
     public async Task<IActionResult> RegisterCustomer([FromBody] RegisterCustomerRequestDto request)
     {
         var command = new RegisterCustomerCommand(request.UserName, request.Email, request.Password, request.ConfirmPassword);
+        var result = await Sender.Send(command);
+
+        return ToHttpResult(result);
+    }
+
+    /// <summary>
+    /// Exchange a refresh token for a new pair of refresh token and access token.
+    /// </summary>
+    [HttpPost("refresh")]
+    [ProducesResponseType(typeof(AuthenticationResponseDto), StatusCodes.Status200OK)]
+    [ProducesResponseType(typeof(ProblemDetails), StatusCodes.Status401Unauthorized)]
+    public async Task<IActionResult> Refresh([FromBody] RefreshTokenRequestDto request)
+    {
+        var command = new RefreshTokenCommand(request.RefreshToken);
         var result = await Sender.Send(command);
 
         return ToHttpResult(result);

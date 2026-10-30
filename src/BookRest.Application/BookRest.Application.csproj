@@ -19,7 +19,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="Features\Authentication\Commands\RefreshToken\" />
     <Folder Include="Features\Authentication\Commands\RevokeToken\" />
     <Folder Include="Features\Customers\Commands\" />
     <Folder Include="Features\Customers\Common\" />

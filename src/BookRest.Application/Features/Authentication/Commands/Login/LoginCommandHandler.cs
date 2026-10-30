@@ -3,8 +3,8 @@ using BookRest.Application.Common.Interfaces;
 using BookRest.Application.Common.Interfaces.Messaging;
 using BookRest.Application.Common.Interfaces.Repositories;
 using BookRest.Application.Features.Authentication.Common;
-using BookRest.Domain.Entities;
 using BookRest.Domain.Shared;
+using BookRest.Domain.Entities;
 
 namespace BookRest.Application.Features.Authentication.Commands.Login;
 
