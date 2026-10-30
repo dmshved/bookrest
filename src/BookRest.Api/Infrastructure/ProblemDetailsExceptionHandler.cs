@@ -1,6 +1,5 @@
 // Learn more: https://www.milanjovanovic.tech/blog/global-error-handling-in-aspnetcore-from-middleware-to-modern-handlers#chaining-exception-handlers
 
-using BookRest.Application.Common.Exceptions;
 using Microsoft.AspNetCore.Diagnostics;
 using Microsoft.AspNetCore.Mvc;
 
@@ -24,27 +23,24 @@ public class ProblemDetailsExceptionHandler : IExceptionHandler
     {
         var (statusCode, problemDetails) = exception switch
         {
-            NotFoundException notFoundException => (StatusCodes.Status404NotFound, new ProblemDetails
+            ArgumentNullException => (StatusCodes.Status400BadRequest, new ProblemDetails
             {
-                Status = StatusCodes.Status404NotFound,
-                Type = "https://tools.ietf.org/html/rfc9110#section-15.5.5",
-                Title = "Not found",
-                Detail = notFoundException.Message
+                Status = StatusCodes.Status400BadRequest,
+                Title = "Invalid argument provided",
+                Type = "https://www.rfc-editor.org/info/rfc9110/#section-15.5.1"
             }),
-            UnauthorizedAccessException unauthorizedAccessException => (StatusCodes.Status401Unauthorized, new ProblemDetails
-            {
-                Status = StatusCodes.Status401Unauthorized,
-                Title = "Unauthorized",
-                Type = "https://tools.ietf.org/html/rfc9110#section-15.5.2",
-                Detail = unauthorizedAccessException.Message
-            }),
-            ForbiddenAccessException => (StatusCodes.Status403Forbidden, new ProblemDetails
+            ArgumentException => (StatusCodes.Status400BadRequest, new ProblemDetails
             {
                 Status = StatusCodes.Status403Forbidden,
-                Title = "Forbidden",
-                Type = "https://tools.ietf.org/html/rfc9110#section-15.5.4"
+                Title = "Invalid argument provided",
+                Type = "https://www.rfc-editor.org/info/rfc9110/#section-15.5.1"
             }),
-            _ => (-1, null)
+            _ => (StatusCodes.Status500InternalServerError, new ProblemDetails
+            {
+                Status = StatusCodes.Status500InternalServerError,
+                Title = "An unexpected error occurred",
+                Type = "https://www.rfc-editor.org/info/rfc9110/#section-15.6.1"
+            })
         };
 
         if (problemDetails is null)
