@@ -1,3 +1,6 @@
-﻿namespace BookRest.Application.Features.Authentication.Common;
+﻿using System.ComponentModel.DataAnnotations;
 
-public record RefreshTokenRequestDto(string RefreshToken);
+namespace BookRest.Application.Features.Authentication.Common;
+
+public record RefreshTokenRequestDto(
+    [Required] string RefreshToken);
