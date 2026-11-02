@@ -29,8 +29,9 @@ public class RefreshTokenRepository : IRefreshTokenRepository
         var now = _clock.GetCurrentInstant();
 
         var activeTokens = await _context.RefreshTokens
-            .Where(t => t.ApplicationUserId == applicationUserId &&
-                        t.IsActive(now))
+            .Where(t => t.ApplicationUserId == applicationUserId
+                        && t.RevokedAt == null
+                        && t.ExpiresAt > now)
             .ToListAsync(cancellationToken);
 
         foreach (var activeToken in activeTokens)
