@@ -2,7 +2,9 @@
 using BookRest.Application.Features.Authentication.Commands.Login;
 using BookRest.Application.Features.Authentication.Commands.Refresh;
 using BookRest.Application.Features.Authentication.Commands.RegisterCustomer;
+using BookRest.Application.Features.Authentication.Commands.Revoke;
 using BookRest.Application.Features.Authentication.Common;
+using BookRest.Domain.Shared;
 using Microsoft.AspNetCore.Mvc;
 
 namespace BookRest.Api.Controllers;
@@ -54,5 +56,18 @@ public class AuthController : ApiController
         var result = await Sender.Send(command);
 
         return ToHttpResult(result);
+    }
+
+    /// <summary>
+    /// Revoke a refresh tokenn.
+    /// </summary>
+    [HttpPost("revoke")]
+    [ProducesResponseType(typeof(Result), StatusCodes.Status200OK)]
+    public async Task<IActionResult> Revoke([FromBody] RevokeTokenRequestDto request)
+    {
+        var command = new RevokeTokenCommand(request.RefreshToken, request.Reason);
+        var result = await Sender.Send(command);
+
+        return ToHttpResult(result, Ok);
     }
 }
