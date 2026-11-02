@@ -16,7 +16,7 @@ public abstract class ApiController : ControllerBase
     /// <summary>
     /// Maps a generic Result into IActionResult with proper status codes.
     /// </summary>
-    public IActionResult ToHttpResult<T>(Result<T> result)
+    protected IActionResult ToHttpResult<T>(Result<T> result)
     {
         if (result.IsSuccess)
         {
@@ -29,11 +29,11 @@ public abstract class ApiController : ControllerBase
     /// <summary>
     /// Maps a Result into IActionResult with proper status codes.
     /// </summary>
-    public IActionResult ToHttpResult(Result result)
+    protected IActionResult ToHttpResult(Result result, Func<IActionResult>? onSuccess = null)
     {
         if (result.IsSuccess)
         {
-            return NoContent();
+            return onSuccess?.Invoke() ?? NoContent();
         }
 
         return ToProblem(result);
@@ -42,7 +42,7 @@ public abstract class ApiController : ControllerBase
     /// <summary>
     /// Maps a failed Result into RFC 9110-compliant <see cref="ProblemDetails"/> responses.
     /// </summary>
-    private IActionResult ToProblem(Result result)
+    protected IActionResult ToProblem(Result result)
     {
         if (result.IsSuccess)
         {
