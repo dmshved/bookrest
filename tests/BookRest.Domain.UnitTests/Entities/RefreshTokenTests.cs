@@ -18,12 +18,14 @@ public sealed class RefreshTokenTests
     public static void Create_WhenValidInput_ShouldReturnValidRefreshToken()
     {
         var applicationUserId = Guid.NewGuid();
-        var refreshToken = RefreshToken.Create("token-value", ExpiresAt, applicationUserId);
+        var tokenValue = "token-value";
 
-        Assert.NotEqual(refreshToken.Id, Guid.Empty);
-        Assert.Equal(refreshToken.Token, "token-value");
-        Assert.Equal(refreshToken.ExpiresAt, ExpiresAt);
-        Assert.Equal(refreshToken.ApplicationUserId, applicationUserId);
+        var refreshToken = RefreshToken.Create(tokenValue, ExpiresAt, applicationUserId);
+
+        Assert.NotEqual(Guid.Empty, refreshToken.Id);
+        Assert.Equal(tokenValue, refreshToken.Token);
+        Assert.Equal(ExpiresAt, refreshToken.ExpiresAt);
+        Assert.Equal(applicationUserId, refreshToken.ApplicationUserId);
         Assert.False(refreshToken.IsRevoked);
     }
 
@@ -31,12 +33,14 @@ public sealed class RefreshTokenTests
     public static void Revoke_WhenNotRevoked_ShouldRevokeRefreshToken()
     {
         var refreshToken = CreateValidRefreshToken();
+        var reason = "reason";
+        var tokenValue = "token-value";
 
-        refreshToken.Revoke(Now, "reason", "token-value");
+        refreshToken.Revoke(Now, reason, tokenValue);
 
         Assert.True(refreshToken.IsRevoked);
-        Assert.Equal(refreshToken.ReasonRevoked, "reason");
-        Assert.Equal(refreshToken.ReplacedByToken, "token-value");
+        Assert.Equal(reason, refreshToken.ReasonRevoked);
+        Assert.Equal(tokenValue, refreshToken.ReplacedByToken);
     }
 
     [Fact]
@@ -49,7 +53,7 @@ public sealed class RefreshTokenTests
         var result = refreshToken.Revoke(Now, "reason", "token-value");
 
         Assert.True(result.IsFailure);
-        Assert.Equal(result.Error, RefreshTokenErrors.AlreadyRevoked());
+        Assert.Equal(RefreshTokenErrors.AlreadyRevoked(), result.Error);
     }
 
     [Fact]

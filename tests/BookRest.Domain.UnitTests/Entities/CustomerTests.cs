@@ -19,10 +19,10 @@ public sealed class CustomerTests
 
         var customer = Customer.Create(applicationUserId, userName, email);
 
-        Assert.NotEqual(customer.Id, Guid.Empty);
-        Assert.Equal(customer.ApplicationUserId, applicationUserId);
-        Assert.Equal(customer.UserName, userName);
-        Assert.Equal(customer.Email, email);
+        Assert.NotEqual(Guid.Empty, customer.Id);
+        Assert.Equal(applicationUserId, customer.ApplicationUserId);
+        Assert.Equal(userName, customer.UserName);
+        Assert.Equal(email, customer.Email);
     }
 
     [Fact]
@@ -36,9 +36,9 @@ public sealed class CustomerTests
 
         customer.Update(newUserName, newEmail);
 
-        Assert.Equal(customer.Id, originalId);
-        Assert.Equal(customer.ApplicationUserId, originalApplicationUserId);
-        Assert.Equal(customer.UserName, newUserName);
-        Assert.Equal(customer.Email, newEmail);
+        Assert.Equal(originalId, customer.Id);
+        Assert.Equal(originalApplicationUserId, customer.ApplicationUserId);
+        Assert.Equal(newUserName, customer.UserName);
+        Assert.Equal(newEmail, customer.Email);
     }
 }
