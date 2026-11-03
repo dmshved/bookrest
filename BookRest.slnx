@@ -4,6 +4,10 @@
     <File Path="Directory.Build.props" />
     <File Path="Directory.Packages.props" />
   </Folder>
+  <Folder Name="/src/" />
+  <Folder Name="/tests/">
+    <Project Path="tests/BookRest.Domain.UnitTests/BookRest.Domain.UnitTests.csproj" />
+  </Folder>
   <Project Path="src/BookRest.Api/BookRest.Api.csproj" Id="14dd0822-1234-458a-b9d9-fd2486e31370" />
   <Project Path="src/BookRest.Application/BookRest.Application.csproj" Id="93955ce9-d28d-49c8-ae07-e43fee43b408" />
   <Project Path="src/BookRest.Domain/BookRest.Domain.csproj" Id="f8b385c6-69c8-45d4-b124-a41f00944d81" />
