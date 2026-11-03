@@ -8,14 +8,14 @@ public sealed class CustomerTests
     private static Customer CreateValidCustomer() => Customer.Create(
         applicationUserId: Guid.NewGuid(),
         userName: "customer",
-        email: Email.Create("customer@gmail.com"));
+        email: Email.Create("customer@gmail.com").Value);
 
     [Fact]
     public static void Create_WhenValidInput_ShouldCreateValidCustomer()
     {
         var applicationUserId = Guid.NewGuid();
         var userName = "customer";
-        var email = Email.Create("customer@gmail.com");
+        var email = Email.Create("customer@gmail.com").Value;
 
         var customer = Customer.Create(applicationUserId, userName, email);
 
@@ -31,7 +31,7 @@ public sealed class CustomerTests
         var customer = CreateValidCustomer();
         var originalId = customer.Id;
         var originalApplicationUserId = customer.ApplicationUserId;
-        var newEmail = Email.Create("updated@gmail.com");
+        var newEmail = Email.Create("updated@gmail.com").Value;
         var newUserName = "updated";
 
         customer.Update(newUserName, newEmail);
