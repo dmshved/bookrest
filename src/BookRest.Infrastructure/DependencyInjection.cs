@@ -89,9 +89,6 @@ public static class DependencyInjection
         builder.Services.AddScoped<IPermissionService, PermissionService>();
         // register cache service PermissionStore later
 
-        // add GrantAsync into the PermissionService and make an endpoint to grant new permissions to the role
-        // * optionally add endpoint to revoke permission
-
         builder.Services.AddSingleton(TimeProvider.System);
 
         builder.Services.AddSingleton<IClock>(serviceProvider =>
