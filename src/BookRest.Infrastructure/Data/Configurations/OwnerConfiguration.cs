@@ -21,7 +21,7 @@ public class OwnerConfiguration : IEntityTypeConfiguration<Owner>
         builder.Property(o => o.Email)
             .HasConversion(
                 email => email.Value,
-                value => Email.Create(value))
+                value => Email.Create(value).Value)
             .HasMaxLength(256)
             .IsRequired();
 

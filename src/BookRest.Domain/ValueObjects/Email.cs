@@ -1,4 +1,5 @@
 using System.Text.RegularExpressions;
+using BookRest.Domain.Errors;
 
 namespace BookRest.Domain.ValueObjects;
 
@@ -17,21 +18,25 @@ public sealed record Email
     /// Creates and validates a new <see cref="Email"/> instance.
     /// </summary>
     /// <param name="email">Email address.</param>
-    /// <returns>A new <see cref="Email"/> instance with the address value normalized to uppercase.</returns>
-    /// <exception cref="ArgumentException">Thrown if the input <paramref name="email"/> is null, whitespace or invalid format.</exception>
-    public static Email Create(string email)
+    /// <returns>
+    /// A successful <see cref="Result{T}"/> containing the <see cref="Email"/> normalized to uppercase,
+    /// or a failure if the input is null, white space or has an invalid format.
+    /// </returns>
+    public static Result<Email> Create(string email)
     {
         if (string.IsNullOrWhiteSpace(email))
         {
-            ArgumentException.ThrowIfNullOrWhiteSpace(email, nameof(email));
+            return Result<Email>.Failure(EmailErrors.EmptyEmail());
         }
 
         if (!Regex.IsMatch(email, @"^[^@\s]+@[^@\s]+\.[^@\s]+$", RegexOptions.IgnoreCase))
         {
-            throw new ArgumentException("Invalid email format.", nameof(email));
+            return Result<Email>.Failure(EmailErrors.InvalidEmail());
         }
 
-        return new Email(email.ToUpperInvariant());
+        var validEmail = new Email(email.ToUpperInvariant());
+
+        return Result<Email>.Success(validEmail);
     }
 
     public override string ToString()

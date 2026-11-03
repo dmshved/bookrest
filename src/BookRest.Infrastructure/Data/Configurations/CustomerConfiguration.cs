@@ -21,7 +21,7 @@ public class CustomerConfiguration : IEntityTypeConfiguration<Customer>
         builder.Property(c => c.Email)
             .HasConversion(
                 email => email.Value,
-                value => Email.Create(value))
+                value => Email.Create(value).Value)
             .HasMaxLength(256)
             .IsRequired();
 

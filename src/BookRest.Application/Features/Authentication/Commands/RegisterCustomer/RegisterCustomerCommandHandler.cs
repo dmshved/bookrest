@@ -34,7 +34,14 @@ public class RegisterCustomerCommandHandler : ICommandHandler<RegisterCustomerCo
 
     public async Task<Result<AuthenticationResponseDto>> Handle(RegisterCustomerCommand request, CancellationToken cancellationToken)
     {
-        var email = Email.Create(request.Email);
+        var emailResult = Email.Create(request.Email);
+
+        if (emailResult.IsFailure)
+        {
+            return Result<AuthenticationResponseDto>.Failure(emailResult.Error!.Value);
+        }
+
+        var email = emailResult.Value;
 
         if (await _customerRepository.ExistsByEmailAsync(email, cancellationToken))
         {
