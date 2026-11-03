@@ -5,16 +5,6 @@
 /// </summary>
 public static class CustomerErrors
 {
-    public static Error EmptyEmail() =>
-        new("Customer.EmptyEmail",
-            "Email cannot be empty.",
-            ErrorType.Validation);
-
-    public static Error InvalidEmail() =>
-        new("Customer.InvalidEmail",
-            "Invalid email format.",
-            ErrorType.Validation);
-
     public static Error AlreadyExists(string email) =>
         new("Customer.AlreadyExists",
             $"Customer with specified '{email}' already exists.",
@@ -30,5 +20,3 @@ public static class CustomerErrors
             $"Customer with specified email '{email}' was not found.",
             ErrorType.NotFound);
 }
-
-
