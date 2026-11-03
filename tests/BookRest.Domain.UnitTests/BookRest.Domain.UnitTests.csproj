@@ -22,8 +22,4 @@
     <ProjectReference Include="..\..\src\BookRest.Domain\BookRest.Domain.csproj" />
   </ItemGroup>
 
-  <ItemGroup>
-    <Folder Include="ValueObjects\" />
-  </ItemGroup>
-
 </Project>
