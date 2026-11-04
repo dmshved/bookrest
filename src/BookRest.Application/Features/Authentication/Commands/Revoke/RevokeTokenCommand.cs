@@ -2,6 +2,6 @@
 
 namespace BookRest.Application.Features.Authentication.Commands.Revoke;
 
-public record RevokeTokenCommand(
+public sealed record RevokeTokenCommand(
     string RefreshToken,
     string? Reason = null) : ICommand;

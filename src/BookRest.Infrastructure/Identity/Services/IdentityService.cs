@@ -10,14 +10,10 @@ namespace BookRest.Infrastructure.Identity.Services;
 internal class IdentityService : IIdentityService
 {
     private readonly UserManager<ApplicationUser> _userManager;
-    private readonly IUserClaimsPrincipalFactory<ApplicationUser> _userClaimsPrincipalFactory;
 
-    public IdentityService(
-        UserManager<ApplicationUser> userManager,
-        IUserClaimsPrincipalFactory<ApplicationUser> userClaimsPrincipalFactory)
+    public IdentityService(UserManager<ApplicationUser> userManager)
     {
         _userManager = userManager;
-        _userClaimsPrincipalFactory = userClaimsPrincipalFactory;
     }
 
     public async Task<string?> GetUserNameAsync(Guid applicationUserId)
