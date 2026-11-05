@@ -7,6 +7,7 @@
   <Folder Name="/src/" />
   <Folder Name="/tests/">
     <Project Path="tests/BookRest.Domain.UnitTests/BookRest.Domain.UnitTests.csproj" />
+    <Project Path="tests/BookRest.Infrastructure.UnitTests/BookRest.Infrastructure.UnitTests.csproj" />
   </Folder>
   <Project Path="src/BookRest.Api/BookRest.Api.csproj" Id="14dd0822-1234-458a-b9d9-fd2486e31370" />
   <Project Path="src/BookRest.Application/BookRest.Application.csproj" Id="93955ce9-d28d-49c8-ae07-e43fee43b408" />
