@@ -8,11 +8,16 @@ BookRest is a restaurant reservation system. It provides a REST API to book rest
 
 ## Table of Contents
 
-- [Core Technologies](#core-technologies) - _in progress..._
-- [Project Architecture](#project-architecture) - _in progress..._
-- [Architecture Decisions](#architecture-decisions) - _in progress..._
-- [Database schema](#database-schema) - _in progress..._
+- [Installation](#installation)
+- [Core Technologies](#core-technologies)
+- [Project Architecture](#project-architecture)
+- [Testing approach](#testing-approach)
+- [Architecture Decisions](#architecture-decisions)
+- [Database schema](#database-schema)
 - [License](#license)
+
+## Installation
+_in progress..._
 
 ## Core Technologies
 
@@ -24,7 +29,7 @@ BookRest is a restaurant reservation system. It provides a REST API to book rest
     - PostgreSQL
     - EF Core
 - IAM:
-    - JWT (Refresh + Access tokens)
+    - ASP.NET Core Identity + JWT (Refresh + Access tokens)
 - Payment Service:
     - Stripe
 - CQRS & Event Handling:
@@ -55,6 +60,19 @@ BookRest.Api             // Controllers, middleware, DI setup
 BookRest.Shared          // Centralise service name constants
 ```
 
+## Testing approach
+
+This project follows the testing diamond framework to keep code well-tested.
+
+<p align="center">
+    <img src="https://www.code4it.dev/blog/testing-vial/the-testing-diamond.png" height="300" alt="Testing Diamond">
+</p>
+
+Following such framework project uses:
+- **E2E Tests**: a small number of end-to-end (E2E) tests to verify complete application workflows.
+- **Integration Tests**: the majority of tests are integration tests, covering interactions between components.
+- **Unit Tests**: a small number of unit tests to verify isolated business logic.
+
 ## Architecture Decisions
 
 While building and structuring BookRest I had to deal with various problems, they are documented at [docs/decisions](docs/decisions)
@@ -63,8 +81,15 @@ While building and structuring BookRest I had to deal with various problems, the
 
 _in progress..._
 
+## Contributing
+
+Pull requests are welcome. For major changes, please open an issue first
+to discuss what you would like to change.
+
+Please make sure to update tests as appropriate.
+
 ___
 
-# License
+## License
 
 This software is licensed under the [MIT license](LICENSE)
