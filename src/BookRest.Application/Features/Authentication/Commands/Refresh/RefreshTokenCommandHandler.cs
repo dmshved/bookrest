@@ -69,12 +69,6 @@ public class RefreshTokenCommandHandler : ICommandHandler<RefreshTokenCommand, A
             return Result<AuthenticationResponseDto>.Failure(IdentityErrors.Unauthorized());
         }
 
-        // Token found but inactive: reject
-        if (storedRefreshToken.IsActive(now) == false)
-        {
-            return Result<AuthenticationResponseDto>.Failure(IdentityErrors.Unauthorized());
-        }
-
         var roles = await _identityService.GetRolesAsync(userInfo.ApplicationUserId);
 
         // Token found and active: rotate
