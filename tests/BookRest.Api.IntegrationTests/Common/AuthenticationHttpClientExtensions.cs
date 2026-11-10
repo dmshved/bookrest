@@ -29,6 +29,7 @@ internal static class AuthenticationHttpClientExtensions
     }
 
     /// <summary>
+    /// Logins user and returns jwt refresh and access tokens.
     /// Returns raw <see cref="HttpResponseMessage"/> for tests that assert on failures.
     /// </summary>
     /// <param name="httpClient">Default implementation of <see cref="HttpClient"/>.</param>
@@ -58,5 +59,52 @@ internal static class AuthenticationHttpClientExtensions
         response.EnsureSuccessStatusCode();
 
         return (await response.Content.ReadFromJsonAsync<AuthenticationResponseDto>())!;
+    }
+
+    /// <summary>
+    /// Exchanges the given JWT refresh token for a new access token and returns the updated authentication information.
+    /// Returns raw <see cref="HttpResponseMessage"/> for tests that assert on failures.
+    /// </summary>
+    /// <param name="httpClient">Default implementation of <see cref="HttpClient"/>.</param>
+    /// <param name="refreshToken">JWT refresh token.</param>
+    /// <returns> A <see cref="HttpResponseMessage"/> containing HTTP response message including the status code and data.</returns>
+    public static async Task<HttpResponseMessage> PostRefreshAsync(this HttpClient httpClient, string refreshToken)
+    {
+        var response = await httpClient.PostAsJsonAsync("/api/v1/auth/refresh",
+            new { refreshToken });
+
+        return response;
+    }
+
+    /// <summary>
+    /// Exchanges the given JWT refresh token for a new access token and returns the updated authentication information.
+    /// </summary>
+    /// <param name="httpClient">Default implementation of <see cref="HttpClient"/>.</param>
+    /// <param name="refreshToken">JWT refresh token.</param>
+    /// <returns>An <see cref="AuthenticationResponseDto"/> containing authentication information about user.</returns>
+    public static async Task<AuthenticationResponseDto> RefreshAsync(this HttpClient httpClient, string refreshToken)
+    {
+        var response = await httpClient.PostAsJsonAsync("/api/v1/auth/refresh",
+            new { refreshToken });
+
+        response.EnsureSuccessStatusCode();
+
+        return (await response.Content.ReadFromJsonAsync<AuthenticationResponseDto>())!;
+    }
+
+    /// <summary>
+    /// Exchanges the given JWT refresh token for a new access token and returns the updated authentication information.
+    /// Returns raw <see cref="HttpResponseMessage"/> for tests that assert on failures.
+    /// </summary>
+    /// <param name="httpClient">Default implementation of <see cref="HttpClient"/>.</param>
+    /// <param name="refreshToken">JWT refresh token.</param>
+    /// <param name="reason">Reason for revoking the token.</param>
+    /// <returns> A <see cref="HttpResponseMessage"/> containing HTTP response message including the status code and data.</returns>
+    public static async Task<HttpResponseMessage> PostRevokeAsync(this HttpClient httpClient, string refreshToken, string? reason = null)
+    {
+        var response = await httpClient.PostAsJsonAsync("/api/v1/auth/revoke",
+            new { refreshToken, reason });
+
+        return response;
     }
 }
