@@ -1,7 +1,5 @@
 ﻿using System.Net;
 using BookRest.Api.IntegrationTests.Common;
-using BookRest.Application.Common.Interfaces.Repositories;
-using BookRest.Domain.Entities;
 using Microsoft.Extensions.DependencyInjection;
 using NodaTime;
 
@@ -20,7 +18,7 @@ public class RevokeTests
     }
 
     [Fact]
-    public async Task CustomerRevokeToken_WhenValidRefreshToken_ShouldReturnOkAndRevokeRefreshToken()
+    public async Task RevokeToken_WhenValidRefreshToken_ShouldReturnOkAndRevokeRefreshToken()
     {
         var email = await _httpClient.RegisterCustomerAsync();
         var authResponse = await _httpClient.LoginAsync(email);
@@ -34,7 +32,7 @@ public class RevokeTests
 
         Assert.Equal(HttpStatusCode.OK, response.StatusCode);
 
-        var storedRefreshToken = await GetStoredRefreshTokenAsync(refreshTokenValue);
+        var storedRefreshToken = await _factory.GetStoredRefreshTokenAsync(refreshTokenValue);
 
         Assert.NotNull(storedRefreshToken);
         Assert.True(storedRefreshToken.IsRevoked);
@@ -44,7 +42,7 @@ public class RevokeTests
     }
 
     [Fact]
-    public async Task CustomerRevokeToken_WhenValidRefreshToken_ShouldStoreReason()
+    public async Task RevokeToken_WhenValidRefreshToken_ShouldStoreReason()
     {
         var email = await _httpClient.RegisterCustomerAsync();
         var authResponse = await _httpClient.LoginAsync(email);
@@ -54,12 +52,12 @@ public class RevokeTests
         var revokeResponse = await _httpClient.PostRevokeAsync(refreshToken, reasonRevoked);
 
         Assert.Equal(HttpStatusCode.OK, revokeResponse.StatusCode);
-        var storedRefreshToken = await GetStoredRefreshTokenAsync(refreshToken);
+        var storedRefreshToken = await _factory.GetStoredRefreshTokenAsync(refreshToken);
         Assert.Equal(reasonRevoked, storedRefreshToken!.ReasonRevoked);
     }
 
     [Fact]
-    public async Task CustomerRevokeToken_WhenRefreshTokenIsRevoked_ShouldReturnOk()
+    public async Task RevokeToken_WhenRefreshTokenIsRevoked_ShouldReturnOk()
     {
         var email = await _httpClient.RegisterCustomerAsync();
         var authResponse = await _httpClient.LoginAsync(email);
@@ -68,10 +66,10 @@ public class RevokeTests
         var secondReason = "Second reason.";
 
         var firstRevoke = await _httpClient.PostRevokeAsync(refreshToken, firstReason);
-        var firstStoredToken = await GetStoredRefreshTokenAsync(refreshToken);
+        var firstStoredToken = await _factory.GetStoredRefreshTokenAsync(refreshToken);
 
         var secondRevoke = await _httpClient.PostRevokeAsync(refreshToken, secondReason);
-        var secondStoredToken = await GetStoredRefreshTokenAsync(refreshToken);
+        var secondStoredToken = await _factory.GetStoredRefreshTokenAsync(refreshToken);
 
         Assert.Equal(HttpStatusCode.OK, firstRevoke.StatusCode);
         Assert.Equal(HttpStatusCode.OK, secondRevoke.StatusCode);
@@ -80,7 +78,7 @@ public class RevokeTests
     }
 
     [Fact]
-    public async Task CustomerRevokeToken_WhenCustomerHasOtherTokens_ShouldRevokeOnlyGivenToken()
+    public async Task RevokeToken_WhenUserHasOtherTokens_ShouldRevokeOnlyGivenToken()
     {
         var email = await _httpClient.RegisterCustomerAsync();
 
@@ -89,8 +87,8 @@ public class RevokeTests
 
         await _httpClient.PostRevokeAsync(firstLogin.RefreshToken);
 
-        var secondRefreshToken = await GetStoredRefreshTokenAsync(secondLogin.RefreshToken);
-        Assert.True(secondRefreshToken!.IsRevoked == false);
+        var secondRefreshToken = await _factory.GetStoredRefreshTokenAsync(secondLogin.RefreshToken);
+        Assert.False(secondRefreshToken!.IsRevoked);
 
         // Check if second refresh token works
         var refreshResponse = await _httpClient.PostRefreshAsync(secondLogin.RefreshToken);
@@ -100,7 +98,7 @@ public class RevokeTests
     [Theory]
     [InlineData("")]
     [InlineData(" ")]
-    public async Task CustomerRevokeToken_WhenRefreshTokenIsEmpty_ShouldReturn400BadRequest(string refreshTokenValue)
+    public async Task RevokeToken_WhenRefreshTokenIsEmpty_ShouldReturn400BadRequest(string refreshTokenValue)
     {
         var refreshResponse = await _httpClient.PostRevokeAsync(refreshTokenValue);
 
@@ -108,20 +106,12 @@ public class RevokeTests
     }
 
     [Fact]
-    public async Task CustomerRevokeToken_WhendRefreshTokenIsNull_ShouldReturnOk()
+    public async Task RevokeToken_WhenRefreshTokenDoesNotExist_ShouldReturnOk()
     {
         var refreshTokenValue = "non-existent-token";
 
         var response = await _httpClient.PostRevokeAsync(refreshTokenValue);
 
         Assert.Equal(HttpStatusCode.OK, response.StatusCode);
-    }
-
-    private async Task<RefreshToken?> GetStoredRefreshTokenAsync(string refreshTokenValue)
-    {
-        using var scope = _factory.Services.CreateScope();
-        var refreshTokenRepository = scope.ServiceProvider.GetRequiredService<IRefreshTokenRepository>();
-
-        return await refreshTokenRepository.GetByTokenAsync(refreshTokenValue);
     }
 }

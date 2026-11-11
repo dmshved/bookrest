@@ -22,7 +22,7 @@ public class LoginTests
     }
 
     [Fact]
-    public async Task LoginCustomer_WhenValidCredentials_ShouldReturnOkAndJwtTokens()
+    public async Task Login_WhenValidCredentials_ShouldReturnOkAndJwtTokens()
     {
         var email = await _httpClient.RegisterCustomerAsync();
         var loginResponse = await _httpClient.PostLoginAsync(email);
@@ -39,19 +39,23 @@ public class LoginTests
         Assert.NotEqual(Guid.Empty, authResponse.ApplicationUserId);
     }
 
-    [Fact]
-    public async Task LoginCustomer_WhenValidCredentials_ShouldReturnAccessTokenWithCustomerRole()
+    [Theory]
+    [InlineData(Roles.Administrator)]
+    [InlineData(Roles.Customer)]
+    [InlineData(Roles.Owner)]
+    public async Task Login_WhenValidCredentials_ShouldReturnAccessTokenWithRole(string roleName)
     {
-        var email = await _httpClient.RegisterCustomerAsync();
+        var email = await _factory.CreateUserWithRole(roleName);
         var authResponse = await _httpClient.LoginAsync(email);
         var accessToken = new JsonWebTokenHandler().ReadJsonWebToken(authResponse.AccessToken);
 
         Assert.Equal(authResponse.ApplicationUserId.ToString(), accessToken.Subject);
-        Assert.Contains(accessToken.Claims, claim => claim.Type == "role" && claim.Value == Roles.Customer);
+        var roleClaim = Assert.Single(accessToken.Claims, claim => claim.Type == "role");
+        Assert.Equal(roleName, roleClaim.Value);
     }
 
     [Fact]
-    public async Task LoginCustomer_WhenValidCredentials_ShouldStoreRefreshToken()
+    public async Task Login_WhenValidCredentials_ShouldStoreRefreshToken()
     {
         var email = await _httpClient.RegisterCustomerAsync();
         var authResponse = await _httpClient.LoginAsync(email);
@@ -68,7 +72,7 @@ public class LoginTests
     }
 
     [Fact]
-    public async Task LoginCustomer_WhenPasswordIsWrong_ShouldReturn401Unauthorized()
+    public async Task Login_WhenPasswordIsWrong_ShouldReturn401Unauthorized()
     {
         var email = await _httpClient.RegisterCustomerAsync();
         var loginResponse = await _httpClient.PostLoginAsync(email, password: "invalid-password");
@@ -77,7 +81,7 @@ public class LoginTests
     }
 
     [Fact]
-    public async Task LoginCustomer_WhenUserDoesNotExist_ShouldReturn401Unauthorized()
+    public async Task Login_WhenUserDoesNotExist_ShouldReturn401Unauthorized()
     {
         var loginResponse = await _httpClient.PostLoginAsync(email: "nonexistent@gmail.com", password: "invalid-password");
 
@@ -90,7 +94,7 @@ public class LoginTests
     [InlineData("invalid-email", "Password1!")]
     [InlineData("tester@gmail.com", "")]
     [InlineData("tester@gmail.com", "short")]
-    public async Task LoginCustomer_WhenInvalidRequest_ShouldReturn400BadRequest(string email, string password)
+    public async Task Login_WhenInvalidRequest_ShouldReturn400BadRequest(string email, string password)
     {
         var loginResponse = await _httpClient.PostLoginAsync(email, password);
 

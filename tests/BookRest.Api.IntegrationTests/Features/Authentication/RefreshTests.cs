@@ -25,7 +25,7 @@ public class RefreshTests
     }
 
     [Fact]
-    public async Task CustomerRefreshToken_WhenValidRefreshToken_ShouldReturnOkAndJwtTokens()
+    public async Task RefreshToken_WhenValidRefreshToken_ShouldReturnOkAndJwtTokens()
     {
         var email = await _httpClient.RegisterCustomerAsync();
         var firstAuth = await _httpClient.LoginAsync(email);
@@ -40,28 +40,32 @@ public class RefreshTests
         Assert.Equal(firstAuth.ApplicationUserId, secondAuth.ApplicationUserId);
     }
 
-    [Fact]
-    public async Task CustomerRefreshToken_WhenValidRefreshToken_ShouldReturnAccessTokenForTheCustomerRole()
+    [Theory]
+    [InlineData(Roles.Administrator)]
+    [InlineData(Roles.Customer)]
+    [InlineData(Roles.Owner)]
+    public async Task RefreshToken_WhenValidRefreshToken_ShouldReturnAccessTokenForTheRole(string roleName)
     {
-        var email = await _httpClient.RegisterCustomerAsync();
+        var email = await _factory.CreateUserWithRole(roleName);
         var firstAuth = await _httpClient.LoginAsync(email);
         var secondAuth = await _httpClient.RefreshAsync(firstAuth.RefreshToken);
 
         var accessToken = new JsonWebTokenHandler().ReadJsonWebToken(secondAuth.AccessToken);
 
         Assert.Equal(firstAuth.ApplicationUserId.ToString(), accessToken.Subject);
-        Assert.Contains(accessToken.Claims, claim => claim.Type == "role" && claim.Value == Roles.Customer);
+        var roleClaim = Assert.Single(accessToken.Claims, claim => claim.Type == "role");
+        Assert.Equal(roleName, roleClaim.Value);
     }
 
     [Fact]
-    public async Task CustomerRefreshToken_WhenValidRefreshToken_ShouldRotateTokens()
+    public async Task RefreshToken_WhenValidRefreshToken_ShouldRotateTokens()
     {
         var email = await _httpClient.RegisterCustomerAsync();
         var firstAuth = await _httpClient.LoginAsync(email);
         var secondAuth = await _httpClient.RefreshAsync(firstAuth.RefreshToken);
 
-        var oldToken = await GetStoredRefreshTokenAsync(firstAuth.RefreshToken);
-        var newToken = await GetStoredRefreshTokenAsync(secondAuth.RefreshToken);
+        var oldToken = await _factory.GetStoredRefreshTokenAsync(firstAuth.RefreshToken);
+        var newToken = await _factory.GetStoredRefreshTokenAsync(secondAuth.RefreshToken);
 
         // Check old refresh token
         Assert.NotNull(oldToken);
@@ -74,7 +78,7 @@ public class RefreshTests
     }
 
     [Fact]
-    public async Task CustomerRefreshToken_WhenRefreshingNewRefreshToken_ShouldRotateTokens()
+    public async Task RefreshToken_WhenRefreshingNewRefreshToken_ShouldRotateTokens()
     {
         var email = await _httpClient.RegisterCustomerAsync();
 
@@ -86,7 +90,7 @@ public class RefreshTests
     }
 
     [Fact]
-    public async Task CustomerRefreshToken_WhenRefreshTokenDoesNotExist_ShouldReturn401Unauthorized()
+    public async Task RefreshToken_WhenRefreshTokenDoesNotExist_ShouldReturn401Unauthorized()
     {
         var response = await _httpClient.PostRefreshAsync("invalid-token");
 
@@ -94,7 +98,7 @@ public class RefreshTests
     }
 
     [Fact]
-    public async Task CustomerRefreshToken_WhenRefreshTokenIsReused_ShouldReturn401UnauthorizedAndRevokeNewRefreshToken()
+    public async Task RefreshToken_WhenRefreshTokenIsReused_ShouldReturn401UnauthorizedAndRevokeNewRefreshToken()
     {
         // Register customer
         var email = await _httpClient.RegisterCustomerAsync();
@@ -108,7 +112,7 @@ public class RefreshTests
         Assert.Equal(HttpStatusCode.Unauthorized, firstResponse.StatusCode);
 
         // New token should be revoked
-        var secondToken = await GetStoredRefreshTokenAsync(secondAuth.RefreshToken);
+        var secondToken = await _factory.GetStoredRefreshTokenAsync(secondAuth.RefreshToken);
 
         Assert.NotNull(secondToken);
         Assert.True(secondToken.IsRevoked);
@@ -119,7 +123,7 @@ public class RefreshTests
     }
 
     [Fact]
-    public async Task CustomerRefreshToken_WhenRefreshTokenIsRevoked_ShouldReturn401Unauthorized()
+    public async Task RefreshToken_WhenRefreshTokenIsRevoked_ShouldReturn401Unauthorized()
     {
         // Register customer
         var email = await _httpClient.RegisterCustomerAsync();
@@ -136,7 +140,7 @@ public class RefreshTests
     }
 
     [Fact]
-    public async Task CustomerRefreshToken_WhenRefreshTokenIsExpired_ShouldReturn401Unauthorized()
+    public async Task RefreshToken_WhenRefreshTokenIsExpired_ShouldReturn401Unauthorized()
     {
         var email = await _httpClient.RegisterCustomerAsync();
         var authResponse = await _httpClient.LoginAsync(email);
@@ -166,18 +170,10 @@ public class RefreshTests
     [Theory]
     [InlineData("")]
     [InlineData(" ")]
-    public async Task CustomerRefreshToken_WhenRefreshTokenIsEmpty_ShouldReturn400BadRequest(string refreshTokenValue)
+    public async Task RefreshToken_WhenRefreshTokenIsEmpty_ShouldReturn400BadRequest(string refreshTokenValue)
     {
         var refreshResponse = await _httpClient.PostRefreshAsync(refreshTokenValue);
 
         Assert.Equal(HttpStatusCode.BadRequest, refreshResponse.StatusCode);
-    }
-
-    private async Task<RefreshToken?> GetStoredRefreshTokenAsync(string refreshTokenValue)
-    {
-        using var scope = _factory.Services.CreateScope();
-        var refreshTokenRepository = scope.ServiceProvider.GetRequiredService<IRefreshTokenRepository>();
-
-        return await refreshTokenRepository.GetByTokenAsync(refreshTokenValue);
     }
 }
