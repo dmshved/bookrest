@@ -1,4 +1,5 @@
-﻿using BookRest.Api.Abstractions;
+﻿using Asp.Versioning;
+using BookRest.Api.Abstractions;
 using BookRest.Application.Features.Authentication.Commands.Login;
 using BookRest.Application.Features.Authentication.Commands.Refresh;
 using BookRest.Application.Features.Authentication.Commands.RegisterCustomer;
@@ -9,7 +10,8 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace BookRest.Api.Controllers;
 
-[Route("api/v1/[controller]")]
+[ApiVersion(1)]
+[Route("api/v{v:apiVersion}/[controller]")]
 public class AuthController : ApiController
 {
     public AuthController(ISender sender) : base(sender)
@@ -19,6 +21,7 @@ public class AuthController : ApiController
     /// <summary>
     /// Authenticate user and return JWT tokens.
     /// </summary>
+    [MapToApiVersion(1)]
     [HttpPost("login")]
     [ProducesResponseType(typeof(AuthenticationResponseDto), StatusCodes.Status200OK)]
     [ProducesResponseType(typeof(ProblemDetails), StatusCodes.Status401Unauthorized)]
@@ -33,6 +36,7 @@ public class AuthController : ApiController
     /// <summary>
     /// Register new customer and return JWT tokens.
     /// </summary>
+    [MapToApiVersion(1)]
     [HttpPost("customers/register")]
     [ProducesResponseType(typeof(AuthenticationResponseDto), StatusCodes.Status200OK)]
     [ProducesResponseType(typeof(ProblemDetails), StatusCodes.Status401Unauthorized)]
@@ -47,6 +51,7 @@ public class AuthController : ApiController
     /// <summary>
     /// Exchange a refresh token for a new pair of refresh token and access token.
     /// </summary>
+    [MapToApiVersion(1)]
     [HttpPost("refresh")]
     [ProducesResponseType(typeof(AuthenticationResponseDto), StatusCodes.Status200OK)]
     [ProducesResponseType(typeof(ProblemDetails), StatusCodes.Status401Unauthorized)]
@@ -61,6 +66,7 @@ public class AuthController : ApiController
     /// <summary>
     /// Revoke a refresh tokenn.
     /// </summary>
+    [MapToApiVersion(1)]
     [HttpPost("revoke")]
     [ProducesResponseType(typeof(Result), StatusCodes.Status200OK)]
     public async Task<IActionResult> Revoke([FromBody] RevokeTokenRequestDto request)
