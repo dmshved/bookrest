@@ -43,6 +43,8 @@ _in progress..._
 - Integrational Testing:
     - Test Containers
     -  WebApplication Factory
+- CI/CD
+    - GitHub Actions
 
 ## Project Architecture
 
