@@ -3,6 +3,7 @@ using BookRest.Api.Abstractions;
 using BookRest.Application.Features.Authentication.Commands.Login;
 using BookRest.Application.Features.Authentication.Commands.Refresh;
 using BookRest.Application.Features.Authentication.Commands.RegisterCustomer;
+using BookRest.Application.Features.Authentication.Commands.RegisterOwner;
 using BookRest.Application.Features.Authentication.Commands.Revoke;
 using BookRest.Application.Features.Authentication.Common;
 using BookRest.Domain.Shared;
@@ -43,6 +44,21 @@ public class AuthController : ApiController
     public async Task<IActionResult> RegisterCustomer([FromBody] RegisterCustomerRequestDto request)
     {
         var command = new RegisterCustomerCommand(request.UserName, request.Email, request.Password, request.ConfirmPassword);
+        var result = await Sender.Send(command);
+
+        return ToHttpResult(result);
+    }
+
+    /// <summary>
+    /// Register new owner and return JWT tokens.
+    /// </summary>
+    [MapToApiVersion(1)]
+    [HttpPost("owners/register")]
+    [ProducesResponseType(typeof(AuthenticationResponseDto), StatusCodes.Status200OK)]
+    [ProducesResponseType(typeof(ProblemDetails), StatusCodes.Status401Unauthorized)]
+    public async Task<IActionResult> RegisterOwner([FromBody] RegisterOwnerRequestDto request)
+    {
+        var command = new RegisterOwnerCommand(request.UserName, request.Email, request.Password, request.ConfirmPassword);
         var result = await Sender.Send(command);
 
         return ToHttpResult(result);
