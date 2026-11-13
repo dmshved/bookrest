@@ -73,8 +73,6 @@ public class RegisterCustomerCommandHandler : ICommandHandler<RegisterCustomerCo
         _customerRepository.Add(customer);
         await _unitOfWork.SaveChangesAsync(cancellationToken);
 
-        // Auto login
-        // Currently use roles, then switch to Permission Based Authorization
         var roles = await _identityService.GetRolesAsync(customer.ApplicationUserId);
 
         var userInfo = await _identityService.GetByEmailAsync(email.Value);

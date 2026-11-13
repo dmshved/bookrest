@@ -7,6 +7,7 @@ public interface IOwnerRepository
 {
     Task<Owner?> GetByApplicationUserIdAsync(Guid applicationUserId, CancellationToken cancellationToken = default);
     Task<Owner?> GetByEmailAsync(Email email, CancellationToken cancellationToken = default);
+    Task<bool> ExistsByEmailAsync(Email email, CancellationToken cancellationToken = default);
 
     void Add(Owner owner);
     void Update(Owner owner);

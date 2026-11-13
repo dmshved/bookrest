@@ -27,6 +27,12 @@ public class OwnerRepository : IOwnerRepository
             .FirstOrDefaultAsync(o => o.Email == email, cancellationToken);
     }
 
+    public Task<bool> ExistsByEmailAsync(Email email, CancellationToken cancellationToken = default)
+    {
+        return _context.Owners
+            .AnyAsync(c => c.Email == email, cancellationToken);
+    }
+
     public void Add(Owner owner)
     {
         _context.Owners.Add(owner);

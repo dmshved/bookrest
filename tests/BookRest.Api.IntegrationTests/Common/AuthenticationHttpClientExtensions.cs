@@ -29,6 +29,46 @@ internal static class AuthenticationHttpClientExtensions
     }
 
     /// <summary>
+    /// Registers owner and returns an email.
+    /// </summary>
+    /// <param name="httpClient">Default implementation of <see cref="HttpClient"/>.</param>
+    /// <param name="password">User password.</param>
+    /// <returns> A <see cref="string"/> containing email of registered user.</returns>
+    public static async Task<string> RegisterOwnerAsync(this HttpClient httpClient, string password = DefaultPassword)
+    {
+        // Keep email unique
+        var email = $"{Guid.NewGuid()}@gmail.com";
+        // Keep username unique
+        var userName = $"tester-{Guid.NewGuid()}";
+
+        var response = await httpClient.PostAsJsonAsync("/api/v1/auth/owners/register",
+            new { userName, email, password, confirmPassword = password });
+
+        response.EnsureSuccessStatusCode();
+
+        return email;
+    }
+
+    /// <summary>
+    /// Registers owner and returns jwt refresh and access tokens.
+    /// Returns raw <see cref="HttpResponseMessage"/> for tests that assert on failures.
+    /// </summary>
+    /// <param name="httpClient">Default implementation of <see cref="HttpClient"/>.</param>
+    /// <param name="email">User email. Generates a unique email if not specified.</param>
+    /// <param name="password">User password.</param>
+    /// <returns> A <see cref="HttpResponseMessage"/> containing HTTP response message including the status code and data.</returns>
+    public static async Task<HttpResponseMessage> PostRegisterOwnerAsync(this HttpClient httpClient, string? email = null, string password = DefaultPassword)
+    {
+        var userName = $"tester-{Guid.NewGuid()}";
+        email ??= $"{Guid.NewGuid()}@gmail.com";
+
+        var response = await httpClient.PostAsJsonAsync("/api/v1/auth/owners/register",
+            new { userName, email, password, confirmPassword = password });
+
+        return response;
+    }
+
+    /// <summary>
     /// Logins user and returns jwt refresh and access tokens.
     /// Returns raw <see cref="HttpResponseMessage"/> for tests that assert on failures.
     /// </summary>
