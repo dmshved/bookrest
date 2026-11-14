@@ -36,10 +36,10 @@ internal static class AuthenticationHttpClientExtensions
     /// <returns> A <see cref="string"/> containing email of registered user.</returns>
     public static async Task<string> RegisterOwnerAsync(this HttpClient httpClient, string password = DefaultPassword)
     {
-        // Keep email unique
-        var email = $"{Guid.NewGuid()}@gmail.com";
         // Keep username unique
         var userName = $"tester-{Guid.NewGuid()}";
+        // Keep email unique
+        var email = $"{Guid.NewGuid()}@gmail.com";
 
         var response = await httpClient.PostAsJsonAsync("/api/v1/auth/owners/register",
             new { userName, email, password, confirmPassword = password });
@@ -54,16 +54,23 @@ internal static class AuthenticationHttpClientExtensions
     /// Returns raw <see cref="HttpResponseMessage"/> for tests that assert on failures.
     /// </summary>
     /// <param name="httpClient">Default implementation of <see cref="HttpClient"/>.</param>
+    /// <param name="userName">User name.</param>
     /// <param name="email">User email. Generates a unique email if not specified.</param>
     /// <param name="password">User password.</param>
+    /// <param name="confirmPassword">Password confirmation.</param>
     /// <returns> A <see cref="HttpResponseMessage"/> containing HTTP response message including the status code and data.</returns>
-    public static async Task<HttpResponseMessage> PostRegisterOwnerAsync(this HttpClient httpClient, string? email = null, string password = DefaultPassword)
+    public static async Task<HttpResponseMessage> PostRegisterOwnerAsync(
+        this HttpClient httpClient,
+        string? userName = null,
+        string? email = null,
+        string password = DefaultPassword,
+        string? confirmPassword = null)
     {
-        var userName = $"tester-{Guid.NewGuid()}";
         email ??= $"{Guid.NewGuid()}@gmail.com";
+        userName ??= $"tester-{Guid.NewGuid()}";
 
         var response = await httpClient.PostAsJsonAsync("/api/v1/auth/owners/register",
-            new { userName, email, password, confirmPassword = password });
+            new { userName, email, password, confirmPassword = confirmPassword ?? password });
 
         return response;
     }
@@ -102,7 +109,7 @@ internal static class AuthenticationHttpClientExtensions
     }
 
     /// <summary>
-    /// Exchanges the given JWT refresh token for a new access token and returns the updated authentication information.
+    /// Exchanges the given refresh token for a new access token and returns the updated authentication information.
     /// Returns raw <see cref="HttpResponseMessage"/> for tests that assert on failures.
     /// </summary>
     /// <param name="httpClient">Default implementation of <see cref="HttpClient"/>.</param>
@@ -117,7 +124,7 @@ internal static class AuthenticationHttpClientExtensions
     }
 
     /// <summary>
-    /// Exchanges the given JWT refresh token for a new access token and returns the updated authentication information.
+    /// Exchanges the given refresh token for a new access token and returns the updated authentication information.
     /// </summary>
     /// <param name="httpClient">Default implementation of <see cref="HttpClient"/>.</param>
     /// <param name="refreshToken">JWT refresh token.</param>
@@ -133,7 +140,7 @@ internal static class AuthenticationHttpClientExtensions
     }
 
     /// <summary>
-    /// Exchanges the given JWT refresh token for a new access token and returns the updated authentication information.
+    /// Revokes the given refresh token.
     /// Returns raw <see cref="HttpResponseMessage"/> for tests that assert on failures.
     /// </summary>
     /// <param name="httpClient">Default implementation of <see cref="HttpClient"/>.</param>

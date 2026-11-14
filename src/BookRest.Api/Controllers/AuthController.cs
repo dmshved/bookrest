@@ -40,7 +40,8 @@ public class AuthController : ApiController
     [MapToApiVersion(1)]
     [HttpPost("customers/register")]
     [ProducesResponseType(typeof(AuthenticationResponseDto), StatusCodes.Status200OK)]
-    [ProducesResponseType(typeof(ProblemDetails), StatusCodes.Status401Unauthorized)]
+    [ProducesResponseType(typeof(ValidationProblemDetails), StatusCodes.Status400BadRequest)]
+    [ProducesResponseType(typeof(ProblemDetails), StatusCodes.Status409Conflict)]
     public async Task<IActionResult> RegisterCustomer([FromBody] RegisterCustomerRequestDto request)
     {
         var command = new RegisterCustomerCommand(request.UserName, request.Email, request.Password, request.ConfirmPassword);
@@ -55,7 +56,8 @@ public class AuthController : ApiController
     [MapToApiVersion(1)]
     [HttpPost("owners/register")]
     [ProducesResponseType(typeof(AuthenticationResponseDto), StatusCodes.Status200OK)]
-    [ProducesResponseType(typeof(ProblemDetails), StatusCodes.Status401Unauthorized)]
+    [ProducesResponseType(typeof(ValidationProblemDetails), StatusCodes.Status400BadRequest)]
+    [ProducesResponseType(typeof(ProblemDetails), StatusCodes.Status409Conflict)]
     public async Task<IActionResult> RegisterOwner([FromBody] RegisterOwnerRequestDto request)
     {
         var command = new RegisterOwnerCommand(request.UserName, request.Email, request.Password, request.ConfirmPassword);
