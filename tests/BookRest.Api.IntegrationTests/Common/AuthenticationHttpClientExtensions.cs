@@ -70,7 +70,7 @@ internal static class AuthenticationHttpClientExtensions
         userName ??= $"tester-{Guid.NewGuid()}";
 
         var response = await httpClient.PostAsJsonAsync("/api/v1/auth/owners/register",
-            new { userName, email, password, confirmPassword });
+            new { userName, email, password, confirmPassword = confirmPassword ?? password });
 
         return response;
     }

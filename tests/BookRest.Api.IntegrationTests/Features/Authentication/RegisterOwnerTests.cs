@@ -38,6 +38,46 @@ public class RegisterOwnerTests
         Assert.NotEqual(Guid.Empty, authResponse.ApplicationUserId);
     }
 
+    [Theory]
+    [InlineData("", "owner@gmail.com", "Password1!", "Password1!")] // Name is empty
+    [InlineData("x", "owner@gmail.com", "Password1!", "Password1!")] // Name too short
+    [InlineData("owner-name", "owner@gmail.com", "Pass1!", "Pass1!")] // Password too short
+    [InlineData("owner-name", "owner@gmail.com", "Password1!", "OtherPassword1!")] // Confirmation mismatch
+    public async Task Register_WhenInvalidCredentials_ShouldReturn400BadRequest(string userName, string email, string password, string confirmPassword)
+    {
+        var registerResponse = await _httpClient.PostRegisterOwnerAsync(userName, email, password, confirmPassword);
+
+        Assert.Equal(HttpStatusCode.BadRequest, registerResponse.StatusCode);
+    }
+
+    [Fact]
+    public async Task Register_WhenValidCredentials_ShouldCreateOwnerProfile()
+    {
+        var email = $"{Guid.NewGuid()}@gmail.com";
+        var userName = $"owner-{Guid.NewGuid()}";
+
+        var registerResponse = await _httpClient.PostRegisterOwnerAsync(email: email, userName: userName);
+        var authResponse = await registerResponse.Content.ReadFromJsonAsync<AuthenticationResponseDto>();
+
+        using var scope = _factory.Services.CreateScope();
+        var ownerRepository = scope.ServiceProvider.GetRequiredService<IOwnerRepository>();
+        var storedOwner = await ownerRepository.GetByApplicationUserIdAsync(authResponse!.ApplicationUserId);
+
+        Assert.NotNull(storedOwner);
+        Assert.Equal(userName, storedOwner.UserName);
+        Assert.Equal(email.ToUpperInvariant(), storedOwner.Email.Value);
+    }
+
+    [Fact]
+    public async Task Register_WhenValidCredentials_ShouldAllowLogin()
+    {
+        var email = await _httpClient.RegisterOwnerAsync();
+
+        var loginResponse = await _httpClient.PostLoginAsync(email);
+
+        Assert.Equal(HttpStatusCode.OK, loginResponse.StatusCode);
+    }
+
     [Fact]
     public async Task Register_WhenValidCredentials_ShouldReturnAccessTokenWithOwnerRole()
     {
@@ -75,13 +115,13 @@ public class RegisterOwnerTests
     {
         var email = "invalid-email";
 
-        var registerResponse = await _httpClient.PostRegisterOwnerAsync(email);
+        var registerResponse = await _httpClient.PostRegisterOwnerAsync(email: email);
 
         Assert.Equal(HttpStatusCode.BadRequest, registerResponse.StatusCode);
     }
 
     [Fact]
-    public async Task Register_WhenPasswordIsWrong_ShouldReturn400BadRequest()
+    public async Task Register_WhenPasswordIsViolatingIdentityRules_ShouldReturn400BadRequest()
     {
         var registerResponse = await _httpClient.PostRegisterOwnerAsync(password: "invalid-password");
 
@@ -93,8 +133,8 @@ public class RegisterOwnerTests
     {
         var email = $"{Guid.NewGuid()}@gmail.com";
 
-        var firstRegisterResponse = await _httpClient.PostRegisterOwnerAsync(email);
-        var secondRegisterResponse = await _httpClient.PostRegisterOwnerAsync(email);
+        var firstRegisterResponse = await _httpClient.PostRegisterOwnerAsync(email: email);
+        var secondRegisterResponse = await _httpClient.PostRegisterOwnerAsync(email: email);
 
         Assert.Equal(HttpStatusCode.OK, firstRegisterResponse.StatusCode);
         Assert.Equal(HttpStatusCode.Conflict, secondRegisterResponse.StatusCode);
