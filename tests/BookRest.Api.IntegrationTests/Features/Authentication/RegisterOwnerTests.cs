@@ -10,12 +10,12 @@ using Microsoft.IdentityModel.JsonWebTokens;
 namespace BookRest.Api.IntegrationTests.Features.Authentication;
 
 [Collection(IntegrationTestCollection.Name)]
-public class OwnerTests
+public class RegisterOwnerTests
 {
     private readonly BookRestWebApplicationFactory _factory;
     private readonly HttpClient _httpClient;
 
-    public OwnerTests(BookRestWebApplicationFactory factory)
+    public RegisterOwnerTests(BookRestWebApplicationFactory factory)
     {
         _factory = factory;
         _httpClient = factory.CreateClient();
@@ -39,7 +39,7 @@ public class OwnerTests
     }
 
     [Fact]
-    public async Task Register_WhenValidCredentials_ShouldReturnAccessTokenWithCustomerRole()
+    public async Task Register_WhenValidCredentials_ShouldReturnAccessTokenWithOwnerRole()
     {
         var registerResponse = await _httpClient.PostRegisterOwnerAsync();
         var authResponse = await registerResponse.Content.ReadFromJsonAsync<AuthenticationResponseDto>();
@@ -89,7 +89,7 @@ public class OwnerTests
     }
 
     [Fact]
-    public async Task Register_WhenOwnerAlreadyExists_ShouldReturn400BadRequest()
+    public async Task Register_WhenOwnerAlreadyExists_ShouldReturn409Conflict()
     {
         var email = $"{Guid.NewGuid()}@gmail.com";
 

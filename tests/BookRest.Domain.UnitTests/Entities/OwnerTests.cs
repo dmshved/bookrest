@@ -3,9 +3,9 @@ using BookRest.Domain.ValueObjects;
 
 namespace BookRest.Domain.UnitTests.Entities;
 
-public sealed class RegisterOwnerTests
+public sealed class OwnerTests
 {
-    private static RegisterOwner createValidOwner() => RegisterOwner.Create(
+    private static Owner createValidOwner() => Owner.Create(
         applicationUserId: Guid.NewGuid(),
         userName: "owner",
         email: Email.Create("owner@gmail.com").Value);
