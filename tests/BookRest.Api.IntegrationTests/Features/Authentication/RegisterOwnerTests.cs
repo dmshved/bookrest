@@ -69,6 +69,18 @@ public class RegisterOwnerTests
     }
 
     [Fact]
+    public async Task Register_WhenEmailsHaveDifferentCases_ShouldReturn409Conflict()
+    {
+        var value = Guid.NewGuid().ToString();
+
+        var firstRegisterResponse = await _httpClient.PostRegisterOwnerAsync(email: $"{value}@gmail.com");
+        var secondRegisterResponse = await _httpClient.PostRegisterOwnerAsync(email: $"{value.ToUpperInvariant()}@GMAIL.COM");
+
+        Assert.Equal(HttpStatusCode.OK, firstRegisterResponse.StatusCode);
+        Assert.Equal(HttpStatusCode.Conflict, secondRegisterResponse.StatusCode);
+    }
+
+    [Fact]
     public async Task Register_WhenValidCredentials_ShouldAllowLogin()
     {
         var email = await _httpClient.RegisterOwnerAsync();
