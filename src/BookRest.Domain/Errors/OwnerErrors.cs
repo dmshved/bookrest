@@ -7,7 +7,7 @@ public static class OwnerErrors
 {
     public static Error AlreadyExists(string email) =>
         new("Owner.AlreadyExists",
-            $"Owner with specified '{email}' already exists.",
+            $"Owner with specified email '{email}' already exists.",
             ErrorType.Conflict);
 
     public static Error NotFoundById(Guid id) =>

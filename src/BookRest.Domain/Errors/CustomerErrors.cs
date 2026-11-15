@@ -7,7 +7,7 @@ public static class CustomerErrors
 {
     public static Error AlreadyExists(string email) =>
         new("Customer.AlreadyExists",
-            $"Customer with specified '{email}' already exists.",
+            $"Customer with specified email '{email}' already exists.",
             ErrorType.Conflict);
 
     public static Error NotFoundById(Guid id) =>
