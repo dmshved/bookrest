@@ -1,8 +1,10 @@
 ﻿using System.Reflection;
+using Amazon.SimpleEmailV2;
 using BookRest.Infrastructure.Data;
 using BookRest.Infrastructure.Data.Interceptors;
 using BookRest.Application.Common.Interfaces;
 using BookRest.Application.Common.Interfaces.Repositories;
+using BookRest.Infrastructure;
 using BookRest.Infrastructure.Authorization;
 using BookRest.Infrastructure.Data.Options;
 using BookRest.Infrastructure.Data.Repositories;
@@ -83,6 +85,13 @@ public static class DependencyInjection
 
         builder.Services.AddOptions<PermissionOptions>()
             .BindConfiguration(PermissionOptions.SectionName);
+
+        builder.Services.AddOptions<EmailOptions>()
+            .BindConfiguration(EmailOptions.SectionName);
+
+        builder.Services.AddDefaultAWSOptions(builder.Configuration.GetAWSOptions());
+        builder.Services.AddAWSService<IAmazonSimpleEmailServiceV2>();
+        builder.Services.AddTransient<IEmailService, SesEmailService>();
 
         builder.Services.AddScoped<IAuthorizationHandler, PermissionAuthorizationHandler>();
         builder.Services.AddSingleton<IAuthorizationPolicyProvider, PermissionPolicyProvider>();
