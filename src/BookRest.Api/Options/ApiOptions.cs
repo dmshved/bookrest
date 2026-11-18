@@ -4,5 +4,5 @@ public class ApiOptions
 {
     public const string SectionName = "ApiOptions";
 
-    public string PubliBaseUrl { get; set; } = string.Empty;
+    public string PublicBaseUrl { get; set; } = string.Empty;
 }

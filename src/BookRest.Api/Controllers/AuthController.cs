@@ -102,12 +102,12 @@ public class AuthController : ApiController
     /// Confirm an email address using the link sent by email.
     /// </summary>
     [MapToApiVersion(1)]
-    [HttpPost("verify-email", Name = AuthRouteNames.VerifyEmail)]
+    [HttpGet("verify-email", Name = AuthRouteNames.VerifyEmail)]
     [ProducesResponseType(StatusCodes.Status204NoContent)]
     [ProducesResponseType(typeof(ValidationProblemDetails), StatusCodes.Status400BadRequest)]
-    public async Task<IActionResult> VerifyEmail([FromQuery] Guid userId, [FromQuery] string token)
+    public async Task<IActionResult> VerifyEmail([FromQuery] Guid applicationUserId, [FromQuery] string confirmationToken)
     {
-        var command = new VerifyEmailCommand(userId, token);
+        var command = new VerifyEmailCommand(applicationUserId, confirmationToken);
         var result = await Sender.Send(command);
 
         return ToHttpResult(result, Ok);

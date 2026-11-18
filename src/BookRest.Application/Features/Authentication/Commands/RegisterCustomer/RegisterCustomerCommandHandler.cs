@@ -92,7 +92,7 @@ public class RegisterCustomerCommandHandler : ICommandHandler<RegisterCustomerCo
         await _unitOfWork.SaveChangesAsync(cancellationToken);
 
         // Email verification
-        await _emailVerificationService.SendAsync(userInfo.ApplicationUserId, email.Value, cancellationToken);
+        await _emailVerificationService.SendAsync(userInfo.ApplicationUserId, request.Email, cancellationToken);
 
         // return AuthenticationResponseDto
         var authenticationResponseDto = new AuthenticationResponseDto(

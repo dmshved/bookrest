@@ -39,7 +39,14 @@ public partial class SesEmailService : IEmailService
             Simple = new Message
             {
                 Subject = new Content { Data = subject },
-                Body = new Body { Text = new Content { Data = body } }
+                Body = new Body
+                {
+                    Html = new Content
+                    {
+                        Data = body,
+                        Charset = "UTF-8"
+                    }
+                }
             }
         };
 

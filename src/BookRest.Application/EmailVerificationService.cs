@@ -34,7 +34,7 @@ public class EmailVerificationService : IEmailVerificationService
         return await _emailService.SendEmailAsync(
             toAddress: toAddress,
             subject: "Verify your email address",
-            body: $"To verify your email address, open this link:\n{verificationLink}.",
+            body: $"To verify your email address, open this link:\n<a href='{verificationLink}'>{verificationLink}</a>.",
             cancellationToken: cancellationToken);
     }
 }

@@ -1,6 +1,5 @@
 ﻿using BookRest.Api.Constants;
 using BookRest.Api.Options;
-using BookRest.Application.Common.Interfaces;
 using BookRest.Application.Common.Interfaces.Emailing;
 using Microsoft.Extensions.Options;
 
@@ -23,14 +22,14 @@ internal sealed class EmailVerificationLinkFactory : IEmailVerificationLinkFacto
     {
         var path = _linkGenerator.GetPathByName(
             endpointName: AuthRouteNames.VerifyEmail,
-            values: new { v = "1", userId = applicationUserId, confirmationToken });
+            values: new { v = "1", applicationUserId, confirmationToken });
 
         if (path == null)
         {
             throw new InvalidOperationException("Failed to create the email verification link.");
         }
 
-        var uri = new Uri(new Uri(_apiOptions.PubliBaseUrl), path).ToString();
+        var uri = new Uri(new Uri(_apiOptions.PublicBaseUrl), path).ToString();
 
         return uri;
     }
