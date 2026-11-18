@@ -1,7 +1,7 @@
 ﻿using Amazon.SimpleEmailV2;
 using Amazon.SimpleEmailV2.Model;
 using BookRest.Application.Common.Errors;
-using BookRest.Application.Common.Interfaces;
+using BookRest.Application.Common.Interfaces.Emailing;
 using BookRest.Domain.Shared;
 using BookRest.Infrastructure.Data.Options;
 using Microsoft.Extensions.Logging;

@@ -1,5 +1,7 @@
-﻿using BookRest.Api.Services;
+﻿using BookRest.Api.Options;
+using BookRest.Api.Services;
 using BookRest.Application.Common.Interfaces;
+using BookRest.Application.Common.Interfaces.Emailing;
 using Microsoft.AspNetCore.Mvc;
 
 // Placing the extension method in this namespace makes it
@@ -46,5 +48,10 @@ public static class DependencyInjection
             // Enable only when fully ready https://hstspreload.org/
             options.Preload = false;
         });
+
+        builder.Services.AddOptions<ApiOptions>()
+            .BindConfiguration(ApiOptions.SectionName);
+
+        builder.Services.AddScoped<IEmailVerificationLinkFactory, EmailVerificationLinkFactory>();
     }
 }
