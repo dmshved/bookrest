@@ -1,10 +1,13 @@
 ﻿using Asp.Versioning;
 using BookRest.Api.Abstractions;
+using BookRest.Api.Constants;
 using BookRest.Application.Features.Authentication.Commands.Login;
 using BookRest.Application.Features.Authentication.Commands.Refresh;
 using BookRest.Application.Features.Authentication.Commands.RegisterCustomer;
 using BookRest.Application.Features.Authentication.Commands.RegisterOwner;
+using BookRest.Application.Features.Authentication.Commands.ResendEmailVerification;
 using BookRest.Application.Features.Authentication.Commands.Revoke;
+using BookRest.Application.Features.Authentication.Commands.VerifyEmail;
 using BookRest.Application.Features.Authentication.Common;
 using BookRest.Domain.Shared;
 using Microsoft.AspNetCore.Mvc;
@@ -90,6 +93,36 @@ public class AuthController : ApiController
     public async Task<IActionResult> Revoke([FromBody] RevokeTokenRequestDto request)
     {
         var command = new RevokeTokenCommand(request.RefreshToken, request.Reason);
+        var result = await Sender.Send(command);
+
+        return ToHttpResult(result, Ok);
+    }
+
+    /// <summary>
+    /// Confirm an email address using the link sent by email.
+    /// </summary>
+    [MapToApiVersion(1)]
+    [HttpPost("verify-email", Name = AuthRouteNames.VerifyEmail)]
+    [ProducesResponseType(StatusCodes.Status204NoContent)]
+    [ProducesResponseType(typeof(ValidationProblemDetails), StatusCodes.Status400BadRequest)]
+    public async Task<IActionResult> VerifyEmail([FromQuery] Guid userId, [FromQuery] string token)
+    {
+        var command = new VerifyEmailCommand(userId, token);
+        var result = await Sender.Send(command);
+
+        return ToHttpResult(result, Ok);
+    }
+
+    /// <summary>
+    /// Send a new verification email.
+    /// </summary>
+    [MapToApiVersion(1)]
+    [HttpPost("verify-email/resend")]
+    [ProducesResponseType(StatusCodes.Status204NoContent)]
+    [ProducesResponseType(typeof(ValidationProblemDetails), StatusCodes.Status400BadRequest)]
+    public async Task<IActionResult> ResendEmailVerification([FromBody] ResendEmailVerificationRequestDto request)
+    {
+        var command = new ResendEmailVerificationCommand(request.Email);
         var result = await Sender.Send(command);
 
         return ToHttpResult(result, Ok);
