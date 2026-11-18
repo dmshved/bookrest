@@ -3,6 +3,7 @@ using Amazon.SimpleEmailV2;
 using BookRest.Infrastructure.Data;
 using BookRest.Infrastructure.Data.Interceptors;
 using BookRest.Application.Common.Interfaces;
+using BookRest.Application.Common.Interfaces.Emailing;
 using BookRest.Application.Common.Interfaces.Repositories;
 using BookRest.Infrastructure;
 using BookRest.Infrastructure.Authorization;
@@ -17,6 +18,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Hosting;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.Options;
 using NodaTime.Extensions;
 
@@ -81,6 +83,7 @@ public static class DependencyInjection
                 options.SignIn.RequireConfirmedEmail = false;
             })
             .AddRoles<ApplicationRole>()
+            .AddDefaultTokenProviders()
             .AddEntityFrameworkStores<ApplicationDbContext>();
 
         builder.Services.AddOptions<PermissionOptions>()

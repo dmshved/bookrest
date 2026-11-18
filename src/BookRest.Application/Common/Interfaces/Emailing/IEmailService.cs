@@ -1,6 +1,6 @@
 ﻿using BookRest.Domain.Shared;
 
-namespace BookRest.Application.Common.Interfaces;
+namespace BookRest.Application.Common.Interfaces.Emailing;
 
 public interface IEmailService
 {
