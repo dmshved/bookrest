@@ -103,7 +103,7 @@ public class AuthController : ApiController
     /// </summary>
     [MapToApiVersion(1)]
     [HttpGet("verify-email", Name = AuthRouteNames.VerifyEmail)]
-    [ProducesResponseType(StatusCodes.Status204NoContent)]
+    [ProducesResponseType(StatusCodes.Status200OK)]
     [ProducesResponseType(typeof(ValidationProblemDetails), StatusCodes.Status400BadRequest)]
     public async Task<IActionResult> VerifyEmail([FromQuery] Guid applicationUserId, [FromQuery] string confirmationToken)
     {
@@ -118,7 +118,7 @@ public class AuthController : ApiController
     /// </summary>
     [MapToApiVersion(1)]
     [HttpPost("verify-email/resend")]
-    [ProducesResponseType(StatusCodes.Status204NoContent)]
+    [ProducesResponseType(StatusCodes.Status200OK)]
     [ProducesResponseType(typeof(ValidationProblemDetails), StatusCodes.Status400BadRequest)]
     public async Task<IActionResult> ResendEmailVerification([FromBody] ResendEmailVerificationRequestDto request)
     {

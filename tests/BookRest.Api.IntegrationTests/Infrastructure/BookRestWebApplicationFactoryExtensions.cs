@@ -3,7 +3,7 @@ using BookRest.Application.Common.Interfaces.Repositories;
 using BookRest.Domain.Entities;
 using Microsoft.Extensions.DependencyInjection;
 
-namespace BookRest.Api.IntegrationTests.Common;
+namespace BookRest.Api.IntegrationTests.Infrastructure;
 
 internal static class BookRestWebApplicationFactoryExtensions
 {
