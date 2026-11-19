@@ -22,6 +22,9 @@ dotnet_diagnostic.CA1062.severity = suggestion
 
 
 dotnet_diagnostic.CA2007.severity = suggestion
+
+
+dotnet_diagnostic.CA2234.severity = suggestion
 [*.{csproj,vbproj,vcxproj,vcxproj.filters,proj,projitems,shproj}]
 indent_size = 2
 
