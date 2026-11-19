@@ -188,7 +188,7 @@ internal static class AuthenticationHttpClientExtensions
     /// <param name="httpClient">Default implementation of <see cref="HttpClient"/>.</param>
     /// <param name="email">User email.</param>
     /// <returns> A <see cref="HttpResponseMessage"/> containing HTTP response message including the status code and data.</returns>
-    public static Task<HttpResponseMessage> PostResendEmailVerification(this HttpClient httpClient, string email)
+    public static Task<HttpResponseMessage> PostResendEmailVerificationAsync(this HttpClient httpClient, string email)
     {
         return httpClient.PostAsJsonAsync("/api/v1/auth/verify-email/resend", new { email });
     }
