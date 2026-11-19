@@ -27,9 +27,12 @@ _in progress..._
     - C#
 - Database:
     - PostgreSQL
+- ORM:
     - EF Core
 - IAM:
     - ASP.NET Core Identity + JWT (Refresh + Access tokens)
+- Email Service:
+    - Amazon SES
 - Payment Service:
     - Stripe
 - CQRS & Event Handling:
@@ -37,12 +40,10 @@ _in progress..._
 - Validation:
     - FluentValidation
     - Ardalis.GuardClauses
-- Unit Testing:
+- Testing:
     - xUnit
     - Moq
-- Integrational Testing:
     - Test Containers
-    -  WebApplication Factory
 - CI/CD
     - GitHub Actions
 
