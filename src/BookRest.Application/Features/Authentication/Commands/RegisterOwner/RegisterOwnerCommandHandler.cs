@@ -1,4 +1,5 @@
 ﻿using BookRest.Application.Common.Interfaces;
+using BookRest.Application.Common.Interfaces.Emailing;
 using BookRest.Application.Common.Interfaces.Messaging;
 using BookRest.Application.Common.Interfaces.Repositories;
 using BookRest.Application.Features.Authentication.Common;
@@ -17,19 +18,22 @@ public class RegisterOwnerCommandHandler : ICommandHandler<RegisterOwnerCommand,
     private readonly ITokenProvider _tokenProvider;
     private readonly IRefreshTokenRepository _refreshTokenRepository;
     private readonly IUnitOfWork _unitOfWork;
+    private readonly IEmailVerificationService _emailVerificationService;
 
     public RegisterOwnerCommandHandler(
         IIdentityService identityService,
         IOwnerRepository ownerRepository,
         ITokenProvider tokenProvider,
         IRefreshTokenRepository refreshTokenRepository,
-        IUnitOfWork unitOfWork)
+        IUnitOfWork unitOfWork,
+        IEmailVerificationService emailVerificationService)
     {
         _identityService = identityService;
         _ownerRepository = ownerRepository;
         _tokenProvider = tokenProvider;
         _refreshTokenRepository = refreshTokenRepository;
         _unitOfWork = unitOfWork;
+        _emailVerificationService = emailVerificationService;
     }
 
     public async Task<Result<AuthenticationResponseDto>> Handle(RegisterOwnerCommand request, CancellationToken cancellationToken)
@@ -86,6 +90,9 @@ public class RegisterOwnerCommandHandler : ICommandHandler<RegisterOwnerCommand,
         // Store refresh token in the database
         _refreshTokenRepository.Add(refreshToken);
         await _unitOfWork.SaveChangesAsync(cancellationToken);
+
+        // Email verification
+        await _emailVerificationService.SendAsync(userInfo.ApplicationUserId, request.Email, cancellationToken);
 
         // return AuthenticationResponseDto
         var authenticationResponseDto = new AuthenticationResponseDto(

@@ -15,6 +15,10 @@ public interface IIdentityService
     Task<Result> AddToRoleAsync(Guid applicationUserId, string role);
     Task<bool> CheckPasswordAsync(Guid applicationUserId, string policyName);
 
+    Task<Result<string>> GenerateEmailConfirmationTokenAsync(Guid applicationUserId);
+    Task<Result> ConfirmEmailAsync(Guid applicationUserId, string confirmationToken);
+    Task<bool> IsEmailConfirmedAsync(Guid applicationUserId);
+
     Task<Result<Guid>> CreateUserAsync(string userName, string email, string password);
     Task<Result> DeleteUserAsync(Guid applicationUserId);
 }

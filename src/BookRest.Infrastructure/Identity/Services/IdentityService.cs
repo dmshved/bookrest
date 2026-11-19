@@ -84,6 +84,46 @@ internal class IdentityService : IIdentityService
         return user != null && await _userManager.CheckPasswordAsync(user, password);
     }
 
+    public async Task<Result<string>> GenerateEmailConfirmationTokenAsync(Guid applicationUserId)
+    {
+        var user = await _userManager.FindByIdAsync(applicationUserId.ToString());
+
+        if (user == null)
+        {
+            return Result<string>.Failure(IdentityErrors.NotFound(applicationUserId.ToString()));
+        }
+
+        var confirmationToken = await _userManager.GenerateEmailConfirmationTokenAsync(user);
+
+        return Result<string>.Success(confirmationToken);
+    }
+
+    public async Task<Result> ConfirmEmailAsync(Guid applicationUserId, string confirmationToken)
+    {
+        var user = await _userManager.FindByIdAsync(applicationUserId.ToString());
+
+        if (user == null)
+        {
+            return Result<string>.Failure(IdentityErrors.NotFound(applicationUserId.ToString()));
+        }
+
+        if (user.EmailConfirmed)
+        {
+            return Result.Success();
+        }
+
+        var result = await _userManager.ConfirmEmailAsync(user, confirmationToken);
+
+        return result.ToApplicationResult();
+    }
+
+    public async Task<bool> IsEmailConfirmedAsync(Guid applicationUserId)
+    {
+        var user = await _userManager.FindByIdAsync(applicationUserId.ToString());
+
+        return user != null && user.EmailConfirmed;
+    }
+
     public async Task<Result<Guid>> CreateUserAsync(string userName, string email, string password)
     {
         var user = new ApplicationUser

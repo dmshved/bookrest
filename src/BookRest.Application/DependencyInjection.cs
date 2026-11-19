@@ -1,5 +1,7 @@
 ﻿using System.Reflection;
+using BookRest.Application;
 using BookRest.Application.Common.Behaviours;
+using BookRest.Application.Common.Interfaces.Emailing;
 using Microsoft.Extensions.Hosting;
 
 // Placing the extension method in this namespace makes it
@@ -23,5 +25,7 @@ public static class DependencyInjection
             config.AddOpenBehavior(typeof(ValidationBehaviour<,>));
             config.AddOpenBehavior(typeof(PerfomanceBehaviour<,>));
         });
+
+        builder.Services.AddScoped<IEmailVerificationService, EmailVerificationService>();
     }
 }

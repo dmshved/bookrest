@@ -1,7 +1,7 @@
 ﻿using System.Net.Http.Json;
 using BookRest.Application.Features.Authentication.Common;
 
-namespace BookRest.Api.IntegrationTests.Common;
+namespace BookRest.Api.IntegrationTests.Infrastructure;
 
 internal static class AuthenticationHttpClientExtensions
 {
@@ -179,5 +179,17 @@ internal static class AuthenticationHttpClientExtensions
             new { refreshToken, reason });
 
         return response;
+    }
+
+    /// <summary>
+    /// Resends the verification email.
+    /// Returns raw <see cref="HttpResponseMessage"/> for tests that assert on failures.
+    /// </summary>
+    /// <param name="httpClient">Default implementation of <see cref="HttpClient"/>.</param>
+    /// <param name="email">User email.</param>
+    /// <returns> A <see cref="HttpResponseMessage"/> containing HTTP response message including the status code and data.</returns>
+    public static Task<HttpResponseMessage> PostResendEmailVerificationAsync(this HttpClient httpClient, string email)
+    {
+        return httpClient.PostAsJsonAsync("/api/v1/auth/verify-email/resend", new { email });
     }
 }

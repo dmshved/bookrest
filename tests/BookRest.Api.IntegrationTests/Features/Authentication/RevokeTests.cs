@@ -1,5 +1,5 @@
 ﻿using System.Net;
-using BookRest.Api.IntegrationTests.Common;
+using BookRest.Api.IntegrationTests.Infrastructure;
 using Microsoft.Extensions.DependencyInjection;
 using NodaTime;
 
