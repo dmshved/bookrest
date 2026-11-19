@@ -1,6 +1,6 @@
 ﻿using System.Net;
 using System.Net.Http.Json;
-using BookRest.Api.IntegrationTests.Common;
+using BookRest.Api.IntegrationTests.Infrastructure;
 using BookRest.Application.Common.Interfaces.Repositories;
 using BookRest.Application.Features.Authentication.Common;
 using BookRest.Domain.Constants;
