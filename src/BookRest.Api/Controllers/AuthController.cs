@@ -1,11 +1,13 @@
 ﻿using Asp.Versioning;
 using BookRest.Api.Abstractions;
 using BookRest.Api.Constants;
+using BookRest.Application.Features.Authentication.Commands.ForgotPassword;
 using BookRest.Application.Features.Authentication.Commands.Login;
 using BookRest.Application.Features.Authentication.Commands.Refresh;
 using BookRest.Application.Features.Authentication.Commands.RegisterCustomer;
 using BookRest.Application.Features.Authentication.Commands.RegisterOwner;
 using BookRest.Application.Features.Authentication.Commands.ResendEmailVerification;
+using BookRest.Application.Features.Authentication.Commands.ResetPassword;
 using BookRest.Application.Features.Authentication.Commands.Revoke;
 using BookRest.Application.Features.Authentication.Commands.VerifyEmail;
 using BookRest.Application.Features.Authentication.Common;
@@ -123,6 +125,41 @@ public class AuthController : ApiController
     public async Task<IActionResult> ResendEmailVerification([FromBody] ResendEmailVerificationRequestDto request)
     {
         var command = new ResendEmailVerificationCommand(request.Email);
+        var result = await Sender.Send(command);
+
+        return ToHttpResult(result, Ok);
+    }
+
+    /// <summary>
+    /// Send a password reset link.
+    /// </summary>
+    [MapToApiVersion(1)]
+    [HttpPost("forgot-password")]
+    [ProducesResponseType(StatusCodes.Status200OK)]
+    [ProducesResponseType(typeof(ValidationProblemDetails), StatusCodes.Status400BadRequest)]
+    public async Task<IActionResult> ForgotPassword([FromBody] ForgotPasswordRequestDto request)
+    {
+        var command = new ForgotPasswordCommand(request.Email);
+        var result = await Sender.Send(command);
+
+        return ToHttpResult(result, Ok);
+    }
+
+    /// <summary>
+    /// Resets a password.
+    /// </summary>
+    [MapToApiVersion(1)]
+    [HttpPost("reset-password")]
+    [ProducesResponseType(StatusCodes.Status200OK)]
+    [ProducesResponseType(typeof(ValidationProblemDetails), StatusCodes.Status400BadRequest)]
+    public async Task<IActionResult> ResetPassword([FromBody] ResetPasswordRequestDto request)
+    {
+        var command = new ResetPasswordCommand(
+            request.ApplicationUserId,
+            request.ResetToken,
+            request.NewPassword,
+            request.ConfirmPassword);
+
         var result = await Sender.Send(command);
 
         return ToHttpResult(result, Ok);
