@@ -27,5 +27,6 @@ public static class DependencyInjection
         });
 
         builder.Services.AddScoped<IEmailVerificationService, EmailVerificationService>();
+        builder.Services.AddScoped<IPasswordResetService, PasswordResetService>();
     }
 }

@@ -52,6 +52,13 @@ public static class DependencyInjection
         builder.Services.AddOptions<ApiOptions>()
             .BindConfiguration(ApiOptions.SectionName);
 
+        builder.Services.AddOptions<ClientOptions>()
+            .BindConfiguration(ClientOptions.SectionName)
+            .Validate(options => Uri.IsWellFormedUriString(options.ResetPasswordUrl, UriKind.Absolute),
+                "ClientOptions:ResetPasswordUrl must be an absolute URL.")
+            .ValidateOnStart();
+
         builder.Services.AddScoped<IEmailVerificationLinkFactory, EmailVerificationLinkFactory>();
+        builder.Services.AddScoped<IPasswordResetLinkFactory, PasswordResetLinkFactory>();
     }
 }
