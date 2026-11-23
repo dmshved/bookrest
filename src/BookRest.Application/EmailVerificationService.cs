@@ -1,4 +1,5 @@
-﻿using BookRest.Application.Common.Interfaces;
+﻿using System.Net;
+using BookRest.Application.Common.Interfaces;
 using BookRest.Application.Common.Interfaces.Emailing;
 using BookRest.Domain.Shared;
 
@@ -30,11 +31,14 @@ public class EmailVerificationService : IEmailVerificationService
         }
 
         var verificationLink = _linkFactory.Create(applicationUserId, tokenResult.Value);
+        var encodedVerificationLink = WebUtility.HtmlEncode(verificationLink);
 
         return await _emailService.SendEmailAsync(
             toAddress: toAddress,
             subject: "Verify your email address",
-            body: $"To verify your email address, open this link:\n<a href='{verificationLink}'>{verificationLink}</a>.",
+            body: $"<p>To verify your email address, open this link:</p>" +
+                  $"<p><a href='{encodedVerificationLink}'>{encodedVerificationLink}</a></p>" +
+                  $"<p>If you didn't request this, ignore this email.</p>",
             cancellationToken: cancellationToken);
     }
 }
