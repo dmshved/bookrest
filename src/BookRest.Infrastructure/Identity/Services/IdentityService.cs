@@ -104,7 +104,7 @@ internal class IdentityService : IIdentityService
 
         if (user == null)
         {
-            return Result<string>.Failure(IdentityErrors.NotFound(applicationUserId.ToString()));
+            return Result.Failure(IdentityErrors.NotFound(applicationUserId.ToString()));
         }
 
         if (user.EmailConfirmed)
@@ -122,6 +122,34 @@ internal class IdentityService : IIdentityService
         var user = await _userManager.FindByIdAsync(applicationUserId.ToString());
 
         return user != null && user.EmailConfirmed;
+    }
+
+    public async Task<Result<string>> GeneratePasswordResetTokenAsync(Guid applicationUserId)
+    {
+        var user = await _userManager.FindByIdAsync(applicationUserId.ToString());
+
+        if (user == null)
+        {
+            return Result<string>.Failure(IdentityErrors.NotFound(applicationUserId.ToString()));
+        }
+
+        var resetToken = await _userManager.GeneratePasswordResetTokenAsync(user);
+
+        return Result<string>.Success(resetToken);
+    }
+
+    public async Task<Result> ResetPasswordAsync(Guid applicationUserId, string resetToken, string newPassword)
+    {
+        var user = await _userManager.FindByIdAsync(applicationUserId.ToString());
+
+        if (user == null)
+        {
+            return Result.Failure(IdentityErrors.NotFound(applicationUserId.ToString()));
+        }
+
+        var result = await _userManager.ResetPasswordAsync(user, resetToken, newPassword);
+
+        return result.ToApplicationResult();
     }
 
     public async Task<Result<Guid>> CreateUserAsync(string userName, string email, string password)

@@ -1,7 +1,6 @@
 ﻿using System.Net;
 using BookRest.Api.IntegrationTests.Infrastructure;
 using BookRest.Application.Common.Errors;
-using BookRest.Application.Features.Authentication.Common;
 using BookRest.Domain.Shared;
 using Moq;
 

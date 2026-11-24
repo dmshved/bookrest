@@ -13,11 +13,14 @@ public interface IIdentityService
 
     Task<bool> IsInRoleAsync(Guid applicationUserId, string role);
     Task<Result> AddToRoleAsync(Guid applicationUserId, string role);
-    Task<bool> CheckPasswordAsync(Guid applicationUserId, string policyName);
+    Task<bool> CheckPasswordAsync(Guid applicationUserId, string password);
 
     Task<Result<string>> GenerateEmailConfirmationTokenAsync(Guid applicationUserId);
     Task<Result> ConfirmEmailAsync(Guid applicationUserId, string confirmationToken);
     Task<bool> IsEmailConfirmedAsync(Guid applicationUserId);
+
+    Task<Result<string>> GeneratePasswordResetTokenAsync(Guid applicationUserId);
+    Task<Result> ResetPasswordAsync(Guid applicationUserId, string resetToken, string newPassword);
 
     Task<Result<Guid>> CreateUserAsync(string userName, string email, string password);
     Task<Result> DeleteUserAsync(Guid applicationUserId);

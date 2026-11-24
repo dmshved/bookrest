@@ -19,6 +19,15 @@ public static class EmailTestExtensions
         return factory.SentEmails.Where(e => e.ToAddress.Equals(address, StringComparison.OrdinalIgnoreCase));
     }
 
+    /// <summary>
+    /// Returns the recorded emails with password reset link. Comparison is case-insensitive.
+    /// </summary>
+    public static IEnumerable<SentEmail> PasswordResetEmailsSentTo(this BookRestWebApplicationFactory factory, string address)
+    {
+        return factory.EmailsSentTo(address)
+            .Where(e => e.Subject == "Reset your password");
+    }
+
     public static EmailVerificationLink GetEmailVerificationLink(this SentEmail email)
     {
         var match = Regex.Match(email.Body, RegexLinkPattern);
@@ -39,6 +48,28 @@ public static class EmailTestExtensions
             PathAndQuery: uri.PathAndQuery,
             ApplicationUserId: applicationUserId,
             ConfirmationToken: confirmationToken);
+    }
+
+    public static PasswordResetLink GetPasswordResetLink(this SentEmail email)
+    {
+        var match = Regex.Match(email.Body, RegexLinkPattern);
+
+        if (!match.Success)
+        {
+            throw new InvalidOperationException($"Failed to get link from the email body: {email.Body}");
+        }
+
+        var uri = new Uri(WebUtility.HtmlDecode(match.Groups["url"].Value));
+        var query = HttpUtility.ParseQueryString(uri.Query);
+
+        var pageUrl = uri.GetLeftPart(UriPartial.Path);
+        var applicationUserId = Guid.Parse(query["applicationUserId"]!);
+        var resetToken = query["resetToken"]!;
+
+        return new PasswordResetLink(
+            pageUrl,
+            applicationUserId,
+            resetToken);
     }
 
     public static async Task<bool> IsEmailConfirmedAsync(this BookRestWebApplicationFactory factory, string email)
