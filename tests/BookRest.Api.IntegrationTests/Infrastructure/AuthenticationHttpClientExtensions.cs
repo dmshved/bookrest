@@ -6,6 +6,7 @@ namespace BookRest.Api.IntegrationTests.Infrastructure;
 internal static class AuthenticationHttpClientExtensions
 {
     public const string DefaultPassword = "Password1!";
+    public const string DefaultNewPassword = "NewPassword1!";
 
     /// <summary>
     /// Registers customer and returns an email.
@@ -191,5 +192,32 @@ internal static class AuthenticationHttpClientExtensions
     public static Task<HttpResponseMessage> PostResendEmailVerificationAsync(this HttpClient httpClient, string email)
     {
         return httpClient.PostAsJsonAsync("/api/v1/auth/verify-email/resend", new { email });
+    }
+
+    /// <summary>
+    /// Sends the email with reset password link.
+    /// Returns raw <see cref="HttpResponseMessage"/> for tests that assert on failures.
+    /// </summary>
+    /// <param name="httpClient">Default implementation of <see cref="HttpClient"/>.</param>
+    /// <param name="email">User email.</param>
+    /// <returns> A <see cref="HttpResponseMessage"/> containing HTTP response message including the status code and data.</returns>
+    public static Task<HttpResponseMessage> PostForgotPasswordAsync(this HttpClient httpClient, string email)
+    {
+        return httpClient.PostAsJsonAsync("/api/v1/auth/forgot-password", new { email });
+    }
+
+    /// <summary>
+    /// Resets the password.
+    /// Returns raw <see cref="HttpResponseMessage"/> for tests that assert on failures.
+    /// </summary>
+    /// <param name="httpClient">Default implementation of <see cref="HttpClient"/>.</param>
+    /// <param name="applicationUserId">User Id.</param>
+    /// <param name="resetToken">Password reset token.</param>
+    /// <param name="newPassword">New password.</param>
+    /// <param name="confirmPassword">Password confirmation. Should be identical to new password.</param>
+    /// <returns> A <see cref="HttpResponseMessage"/> containing HTTP response message including the status code and data.</returns>
+    public static Task<HttpResponseMessage> PostResetPasswordAsync(this HttpClient httpClient, Guid applicationUserId, string resetToken, string newPassword = DefaultNewPassword, string? confirmPassword = null)
+    {
+        return httpClient.PostAsJsonAsync("/api/v1/auth/reset-password", new { applicationUserId, resetToken, newPassword, confirmPassword = confirmPassword ?? newPassword });
     }
 }
