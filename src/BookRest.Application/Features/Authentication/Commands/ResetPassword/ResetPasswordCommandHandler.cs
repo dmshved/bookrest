@@ -1,5 +1,4 @@
 ﻿using BookRest.Application.Common.Interfaces;
-using BookRest.Application.Common.Interfaces.Messaging;
 using BookRest.Application.Common.Interfaces.Repositories;
 using BookRest.Domain.Shared;
 

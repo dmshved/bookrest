@@ -1,5 +1,4 @@
 ﻿using BookRest.Application.Common.Interfaces;
-using BookRest.Application.Common.Interfaces.Messaging;
 using BookRest.Domain.Shared;
 
 namespace BookRest.Application.Features.Authentication.Commands.VerifyEmail;
