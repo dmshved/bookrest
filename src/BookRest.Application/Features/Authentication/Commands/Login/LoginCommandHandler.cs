@@ -36,7 +36,6 @@ public class LoginCommandHandler : ICommandHandler<LoginCommand, AuthenticationR
             return Result<AuthenticationResponseDto>.Failure(IdentityErrors.InvalidCredentials());
         }
 
-        // Currently use roles, then switch to Permission Based Authorization
         var roles = await _identityService.GetRolesAsync(userInfo.ApplicationUserId);
 
         // Generate tokens

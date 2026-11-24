@@ -1,4 +1,5 @@
-﻿using BookRest.Application.Common.Interfaces;
+﻿using System.Net;
+using BookRest.Application.Common.Interfaces;
 using BookRest.Application.Common.Interfaces.Emailing;
 using BookRest.Domain.Shared;
 
@@ -30,13 +31,13 @@ public class PasswordResetService : IPasswordResetService
         }
 
         var verificationLink = _linkFactory.Create(applicationUserId, tokenResult.Value);
-        // var encodedVerificationLink = WebUtility.HtmlEncode(verificationLink);
+        var encodedVerificationLink = WebUtility.HtmlEncode(verificationLink);
 
         return await _emailService.SendEmailAsync(
             toAddress: toAddress,
             subject: "Reset your password",
             body: $"<p>To reset your password, open this link:</p>" +
-                  $"<p><a href='{verificationLink}'>{verificationLink}</a></p>" +
+                  $"<p><a href='{encodedVerificationLink}'>{encodedVerificationLink}</a></p>" +
                   $"<p>If you didn't request this, ignore this email.</p>",
             cancellationToken: cancellationToken);
     }

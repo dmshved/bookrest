@@ -27,12 +27,7 @@ public class ResetPasswordCommandHandler : ICommandHandler<ResetPasswordCommand>
 
         if (result.IsFailure)
         {
-            if (result is IValidationResult validationResult)
-            {
-                return ValidationResult.WithErrors(validationResult.Errors);
-            }
-
-            return Result.Failure(result.Error!.Value);
+            return result;
         }
 
         await _refreshTokenRepository.RevokeAllActiveTokensAsync(
