@@ -22,9 +22,13 @@ public class Customer : BaseAuditableEntity
         };
     }
 
-    public void Update(string userName, Email email)
+    public void UpdateProfile(string userName)
     {
         UserName = userName;
+    }
+
+    public void ChangeEmail(Email email)
+    {
         Email = email;
     }
 }
