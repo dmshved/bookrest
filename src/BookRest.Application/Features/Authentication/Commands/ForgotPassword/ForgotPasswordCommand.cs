@@ -1,5 +1,3 @@
-﻿using BookRest.Application.Common.Interfaces.Messaging;
-
-namespace BookRest.Application.Features.Authentication.Commands.ForgotPassword;
+﻿namespace BookRest.Application.Features.Authentication.Commands.ForgotPassword;
 
 public sealed record ForgotPasswordCommand(string Email) : ICommand;

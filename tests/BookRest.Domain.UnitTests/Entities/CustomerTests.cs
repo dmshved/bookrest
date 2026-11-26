@@ -26,19 +26,17 @@ public sealed class CustomerTests
     }
 
     [Fact]
-    public static void Update_WhenValidInput_ShouldUpdateCustomer()
+    public static void UpdateProfile_WhenValidInput_ShouldUpdateCustomerProfile()
     {
         var customer = CreateValidCustomer();
         var originalId = customer.Id;
         var originalApplicationUserId = customer.ApplicationUserId;
-        var newEmail = Email.Create("updated@gmail.com").Value;
         var newUserName = "updated";
 
-        customer.Update(newUserName, newEmail);
+        customer.UpdateProfile(newUserName);
 
         Assert.Equal(originalId, customer.Id);
         Assert.Equal(originalApplicationUserId, customer.ApplicationUserId);
         Assert.Equal(newUserName, customer.UserName);
-        Assert.Equal(newEmail, customer.Email);
     }
 }

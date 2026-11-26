@@ -178,4 +178,18 @@ internal class IdentityService : IIdentityService
 
         return result.ToApplicationResult();
     }
+
+    public async Task<Result> SetUserNameAsync(Guid applicationUserId, string userName)
+    {
+        var user = await _userManager.FindByIdAsync(applicationUserId.ToString());
+
+        if (user == null)
+        {
+            return Result<string>.Failure(IdentityErrors.NotFound(applicationUserId.ToString()));
+        }
+
+        var result = await _userManager.SetUserNameAsync(user, userName);
+
+        return result.ToApplicationResult();
+    }
 }

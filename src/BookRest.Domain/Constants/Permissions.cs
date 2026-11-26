@@ -21,6 +21,19 @@ public static class Permissions
     ];
 
     /// <summary>
+    /// Represents permissions for customers.
+    /// </summary>
+    public static class Customers
+    {
+        public const string Edit = "Permissions.Customers.Edit";
+
+        public static IReadOnlyList<string> All =>
+        [
+            Edit
+        ];
+    }
+
+    /// <summary>
     /// Represents permissions for restaurants.
     /// </summary>
     public static class Restaurants

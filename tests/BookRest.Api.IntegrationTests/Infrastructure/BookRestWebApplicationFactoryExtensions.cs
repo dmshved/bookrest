@@ -1,4 +1,5 @@
-﻿using BookRest.Application.Common.Interfaces;
+﻿using System.Net.Http.Headers;
+using BookRest.Application.Common.Interfaces;
 using BookRest.Application.Common.Interfaces.Repositories;
 using BookRest.Domain.Entities;
 using Microsoft.Extensions.DependencyInjection;
@@ -56,5 +57,47 @@ internal static class BookRestWebApplicationFactoryExtensions
         var refreshTokenRepository = scope.ServiceProvider.GetRequiredService<IRefreshTokenRepository>();
 
         return await refreshTokenRepository.GetByTokenAsync(refreshTokenValue);
+    }
+
+    /// <summary>
+    /// Returns customer stored in the database.
+    /// </summary>
+    /// <param name="factory">The test web application factory.</param>
+    /// <param name="applicationUserId">The customer application user id.</param>
+    /// <returns>A <see cref="Customer"/> instance.</returns>
+    public static async Task<Customer?> GetStoredCustomerByApplicationUserIdAsync(this BookRestWebApplicationFactory factory, Guid applicationUserId)
+    {
+        using var scope = factory.Services.CreateScope();
+        var customerRepository = scope.ServiceProvider.GetRequiredService<ICustomerRepository>();
+
+        return await customerRepository.GetByApplicationUserIdAsync(applicationUserId);
+    }
+
+    /// <summary>
+    /// Sets the authorization header with access token.
+    /// </summary>
+    /// <param name="factory">The test web application factory.</param>
+    /// <param name="accessToken">The JWT access token.</param>
+    /// <returns>The exact same <see cref="HttpClient"/> instance.</returns>
+    public static HttpClient CreateClientWithBearerToken(this BookRestWebApplicationFactory factory, string accessToken)
+    {
+        var httpClient = factory.CreateClient();
+        httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", accessToken);
+
+        return httpClient;
+    }
+
+    /// <summary>
+    /// Returns the name of the stored identity user.
+    /// </summary>
+    /// <param name="factory">The test web application factory.</param>
+    /// <param name="applicationUserId">Identity user id.</param>
+    /// <returns>A <see cref="string"/> name of the identity user.</returns>
+    public static async Task<string?> GetStoredApplicationUserNameAsync(this BookRestWebApplicationFactory factory, Guid applicationUserId)
+    {
+        using var scope = factory.Services.CreateScope();
+        var identityService = scope.ServiceProvider.GetRequiredService<IIdentityService>();
+
+        return await identityService.GetUserNameAsync(applicationUserId);
     }
 }
