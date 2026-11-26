@@ -3,7 +3,6 @@ using BookRest.Api.Abstractions;
 using BookRest.Application.Features.Customers.Commands.UpdateCustomerProfile;
 using BookRest.Application.Features.Customers.Common;
 using BookRest.Domain.Constants;
-using BookRest.Domain.Shared;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
@@ -24,11 +23,12 @@ public class CustomersController : ApiController
     [MapToApiVersion(1)]
     [HttpPut("me")]
     [Authorize(Policy = Permissions.Customers.Edit)]
-    [ProducesResponseType(typeof(Result), StatusCodes.Status204NoContent)]
+    [ProducesResponseType(StatusCodes.Status200OK)]
     [ProducesResponseType(typeof(ValidationProblemDetails), StatusCodes.Status400BadRequest)]
-    [ProducesResponseType(typeof(ProblemDetails), StatusCodes.Status401Unauthorized)]
+    [ProducesResponseType(StatusCodes.Status401Unauthorized)]
+    [ProducesResponseType(StatusCodes.Status403Forbidden)]
     [ProducesResponseType(typeof(ProblemDetails), StatusCodes.Status404NotFound)]
-    public async Task<IActionResult> RegisterCustomer([FromBody] UpdateCustomerProfileRequestDto request)
+    public async Task<IActionResult> UpdateProfile([FromBody] UpdateCustomerProfileRequestDto request)
     {
         var command = new UpdateCustomerProfileCommand(request.UserName);
         var result = await Sender.Send(command);

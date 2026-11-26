@@ -110,7 +110,7 @@ public class ApplicationDbContextInitialiser
         // Customer permissions
         await GrantAsync(Roles.Customer,
         [
-            // Permissions.Customers.Edit,
+            Permissions.Customers.Edit,
             Permissions.Restaurants.View,
             Permissions.Orders.View,
             Permissions.Orders.Create
