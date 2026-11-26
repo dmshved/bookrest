@@ -17,9 +17,4 @@
   <ItemGroup>
     <ProjectReference Include="..\BookRest.Domain\BookRest.Domain.csproj" />
   </ItemGroup>
-
-  <ItemGroup>
-    <Folder Include="Features\Customers\Commands\" />
-    <Folder Include="Features\Customers\Common\" />
-  </ItemGroup>
 </Project>
